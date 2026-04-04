@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0A0A0A">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>57 Barber Club | Sistema de Agendamento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: #0A0A0A;
+            color: #E8E6E1;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Poppins', 'Inter', system-ui, 'Helvetica Neue', sans-serif;
+            overflow-y: auto;
+            overflow-x: hidden;
+            min-height: 100%;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* TELA DE BOAS-VINDAS */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0A0A0A 0%, #1A1208 50%, #0A0A0A 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+            opacity: 1;
+        }
+
+        .splash-content {
+            text-align: center;
+            animation: fadeInUpScale 0.8s ease-out;
+            padding: 20px;
+        }
+
+        .splash-logo-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .splash-logo-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #D4AF37, #FFE88C, #D4AF37);
+            animation: rotateRing 3s linear infinite;
+        }
+
+        @keyframes rotateRing {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .splash-logo-ring::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border-radius: 50%;
+            background: #0A0A0A;
+        }
+
+        .splash-logo {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #D4AF37, #8B6914);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
+        }
+
+        .splash-logo span {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #0A0A0A;
+            letter-spacing: 2px;
+        }
+
+        .splash-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #D4AF37, #FFE88C, #D4AF37);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shimmer 2s infinite;
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .splash-sub {
+            color: #D4AF37;
+            font-size: 0.9rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .splash-divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+            margin: 1rem auto;
+        }
+
+        .splash-tagline {
+            font-size: 0.7rem;
+            color: #888;
+            letter-spacing: 2px;
+        }
+
+        @keyframes fadeInUpScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* MAIN CONTENT - INICIALMENTE ESCONDIDO */
+        .main-content {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            min-height: 100%;
+            display: block;
+        }
+
+        .main-content.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: 0 auto;
+            padding: 1rem;
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            padding: 0.8rem;
+            background: rgba(18, 18, 18, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #D4AF37;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+        }
+
+        .logo-text .barber {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #FFF;
+        }
+
+        .logo-text .club {
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: #D4AF37;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            background: rgba(18, 18, 18, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 0.4rem;
+            border-radius: 60px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.7rem;
+            background: transparent;
+            border: none;
+            color: #AAA;
+            font-weight: 600;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #D4AF37, #B8921E);
+            color: #0A0A0A;
+        }
+
+        .card {
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 1.3rem;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            margin-bottom: 1.2rem;
+        }
+
+        .card h2, .card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid #D4AF37;
+            padding-left: 0.7rem;
+            color: #D4AF37;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.8rem;
+            color: #D4AF37;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            background: #1E1E1E;
+            border: 1px solid #333;
+            border-radius: 16px;
+            color: #FFF;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
+
+        datalist {
+            background: #1E1E1E;
+            border-radius: 16px;
+        }
+
+        .btn {
+            background: linear-gradient(95deg, #D4AF37, #B8921E);
+            border: none;
+            padding: 0.75rem;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #0A0A0A;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: #2A2A2A;
+            color: #D4AF37;
+            border: 1px solid #D4AF37;
+        }
+
+        .list-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .item-card {
+            background: #1E1E1E;
+            margin-bottom: 0.7rem;
+            padding: 0.8rem;
+            border-radius: 16px;
+            border-left: 4px solid #D4AF37;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .item-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .item-info p {
+            font-size: 0.7rem;
+            color: #D4AF37;
+        }
+
+        .confirm-btn, .whatsapp-btn, .edit-client-btn {
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid #D4AF37;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            color: #D4AF37;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .delete-btn {
+            background: rgba(210, 65, 65, 0.2);
+            border: 1px solid #8B3A3A;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            color: #FF8888;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .free-cut-badge {
+            background: #D4AF37;
+            color: #0A0A0A;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 1.5rem;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .stats {
+            background: #1A1A1A;
+            padding: 0.4rem;
+            text-align: center;
+            border-radius: 30px;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            color: #D4AF37;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .modal-box {
+            background: #1A1A1A;
+            padding: 1.5rem;
+            border-radius: 28px;
+            text-align: center;
+            border: 2px solid #D4AF37;
+            max-width: 90%;
+            width: 320px;
+        }
+
+        .modal-box h3 {
+            color: #D4AF37;
+            margin-bottom: 0.8rem;
+        }
+
+        .modal-box p {
+            margin-bottom: 1.2rem;
+            color: #CCC;
+            font-size: 0.9rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            background: #D4AF37;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-btn-secondary {
+            background: #333;
+            color: #FFF;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .times-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .time-btn {
+            background: #2A2A2A;
+            border: 1px solid #D4AF37;
+            padding: 0.6rem;
+            border-radius: 40px;
+            color: #D4AF37;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #D4AF37;
+            color: #0A0A0A;
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+            white-space: nowrap;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.6rem;
+            color: #555;
+        }
+
+        .footer a {
+            color: #D4AF37;
+            text-decoration: none;
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 0.7rem; }
+            .card { padding: 1rem; }
+            .tab-btn { padding: 0.5rem; font-size: 0.75rem; }
+            .times-grid { grid-template-columns: repeat(2, 1fr); }
+            .splash-title { font-size: 1.8rem; letter-spacing: 2px; }
+            .splash-logo { width: 120px; height: 120px; }
+            .splash-logo span { font-size: 2.8rem; }
+            .splash-logo-ring { width: 140px; height: 140px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- TELA DE BOAS-VINDAS -->
+<div class="splash-screen" id="splashScreen">
+    <div class="splash-content">
+        <div class="splash-logo-container">
+            <div class="splash-logo-ring"></div>
+            <div class="splash-logo">
+                <span>57</span>
+            </div>
+        </div>
+        <div class="splash-title">BARBER CLUB</div>
+        <div class="splash-sub">Premium Barbershop</div>
+        <div class="splash-divider"></div>
+        <div class="splash-tagline">ESTILO • TRADIÇÃO • FUTURO</div>
+    </div>
+</div>
+
+<!-- CONTEÚDO PRINCIPAL -->
+<div class="main-content" id="mainContent">
+    <div class="container">
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-number">57</div>
+                <div class="logo-text">
+                    <div class="barber">BARBER</div>
+                    <div class="club">CLUB</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn" onclick="switchTab('booking')">✂️ AGENDAR</button>
+            <button class="tab-btn active" onclick="switchTab('manage')">📋 GERENCIAR</button>
+            <button class="tab-btn" onclick="switchTab('clients')">👥 CLIENTES</button>
+        </div>
+
+        <div id="bookingTab" style="display: none;">
+            <div class="card">
+                <h2>📝 Novo Agendamento</h2>
+                <form id="bookingForm">
+                    <div class="form-group">
+                        <label>👤 Nome do Cliente (ou digite para buscar)</label>
+                        <input type="text" id="clientName" list="clientsListDatalist" placeholder="Digite o nome ou selecione" autocomplete="off" required>
+                        <datalist id="clientsListDatalist"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>📞 WhatsApp (com DDD)</label>
+                        <input type="tel" id="clientPhone" placeholder="11999999999" required>
+                    </div>
+                    <div class="form-group">
+                        <label>📅 Data</label>
+                        <input type="date" id="bookingDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>⏰ Horário</label>
+                        <select id="bookingTime" required><option value="">Selecionar</option></select>
+                    </div>
+                    <button type="submit" class="btn">📲 Enviar Mensagem ao Cliente</button>
+                </form>
+            </div>
+            <div class="card"><h3>⏳ Solicitações Pendentes</h3><div id="pendingList" class="list-container"></div></div>
+        </div>
+
+        <div id="manageTab" style="display: block;">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2>✅ Agendamentos Confirmados</h2>
+                    <button id="quickNewClientBtn" class="btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; width: auto;">➕ Novo Cliente</button>
+                </div>
+                <div class="stats">Total: <span id="totalConfirmed">0</span> agendamentos</div>
+                <input type="text" id="searchInput" placeholder="🔍 Buscar cliente..." style="margin-bottom: 1rem;">
+                <div id="confirmedList" class="list-container"></div>
+                <button id="clearAllBtn" class="btn btn-secondary" style="margin-top: 1rem;">🗑️ Limpar Todos</button>
+            </div>
+        </div>
+
+        <div id="clientsTab" style="display: none;">
+            <div class="card">
+                <h2>👥 Clientes Cadastrados</h2>
+                <div class="stats">Total: <span id="totalClients">0</span> clientes</div>
+                <input type="text" id="searchClientInput" placeholder="🔍 Buscar cliente..." style="margin-bottom: 1rem;">
+                <div id="clientsList" class="list-container"></div>
+                <button id="newClientBtn" class="btn" style="margin-top: 1rem;">➕ Novo Cliente</button>
+            </div>
+        </div>
+
+        <div class="footer">desenvolvido por <a href="#">TechVision</a> © 2026</div>
+    </div>
+</div>
+
+<script>
+    // Função para esconder splash screen e mostrar conteúdo
+    function hideSplashAndShowContent() {
+        var splash = document.getElementById('splashScreen');
+        var main = document.getElementById('mainContent');
+        
+        if (splash && main) {
+            splash.style.opacity = '0';
+            setTimeout(function() {
+                splash.style.display = 'none';
+                main.classList.add('visible');
+            }, 500);
+        }
+    }
+
+    // Verificar se é a primeira execução
+    function initializeSystem() {
+        var barberPhone = localStorage.getItem('barber_phone');
+        var barberName = localStorage.getItem('barber_name');
+        
+        if (!barberPhone || !barberName) {
+            setTimeout(function() {
+                showBarberRegistrationModal();
+            }, 300);
+        } else {
+            loadData();
+            updateTimeOptions();
+            setupClientNameSearch();
+        }
+    }
+    
+    // Modal de cadastro do barbeiro
+    function showBarberRegistrationModal() {
+        var modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-box">
+                <h3>✂️ Bem-vindo ao 57 Barber Club!</h3>
+                <p>Faça seu pré-cadastro para começar</p>
+                <div class="form-group">
+                    <label>👤 Seu Nome</label>
+                    <input type="text" id="barberNameInput" placeholder="Seu Nome">
+                </div>
+                <div class="form-group">
+                    <label>📱 Seu WhatsApp (com DDD)</label>
+                    <input type="tel" id="barberPhoneInput" placeholder="Seu WhatsApp">
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn" id="saveBarberBtn">Salvar</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        document.getElementById('saveBarberBtn').onclick = function() {
+            var name = document.getElementById('barberNameInput').value.trim();
+            var phone = document.getElementById('barberPhoneInput').value.replace(/\D/g, '');
+            
+            if (name && phone.length >= 10) {
+                localStorage.setItem('barber_name', name);
+                localStorage.setItem('barber_phone', phone);
+                modal.remove();
+                showToast('✅ Cadastro realizado com sucesso!');
+                loadData();
+                updateTimeOptions();
+                setupClientNameSearch();
+            } else {
+                showToast('❌ Preencha todos os campos corretamente!');
+            }
+        };
+    }
+    
+    // Funções auxiliares
+    function showToast(msg) {
+        var toast = document.createElement('div');
+        toast.className = 'toast-msg';
+        toast.textContent = msg;
+        document.body.appendChild(toast);
+        setTimeout(function() { 
+            if (toast.parentNode) toast.parentNode.removeChild(toast); 
+        }, 2500);
+    }
+    
+    function showAlertModal(title, message, onClose) {
+        var modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-box">
+                <h3>${title}</h3>
+                <p>${message}</p>
+                <button class="modal-btn" id="modalOkBtn">OK</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.getElementById('modalOkBtn').onclick = function() {
+            if (modal.parentNode) modal.parentNode.removeChild(modal);
+            if (onClose) onClose();
+        };
+    }
+    
+    function showConfirmModal(title, message, onConfirm, onCancel) {
+        var modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-box">
+                <h3>${title}</h3>
+                <p>${message}</p>
+                <div class="modal-buttons">
+                    <button class="modal-btn" id="modalConfirmBtn">Sim</button>
+                    <button class="modal-btn-secondary" id="modalCancelBtn">Não</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.getElementById('modalConfirmBtn').onclick = function() {
+            if (modal.parentNode) modal.parentNode.removeChild(modal);
+            if (onConfirm) onConfirm();
+        };
+        document.getElementById('modalCancelBtn').onclick = function() {
+            if (modal.parentNode) modal.parentNode.removeChild(modal);
+            if (onCancel) onCancel();
+        };
+    }
+    
+    function formatPhone(phone) {
+        var cleaned = phone.replace(/\D/g, '');
+        if (!cleaned.startsWith('55')) cleaned = '55' + cleaned;
+        return cleaned;
+    }
+    
+    function sendWhatsApp(phone, message) {
+        var formattedPhone = formatPhone(phone);
+        var url = 'https://wa.me/' + formattedPhone + '?text=' + encodeURIComponent(message);
+        window.open(url, '_blank');
+        return true;
+    }
+    
+    // Variáveis globais
+    var confirmedAppointments = [];
+    var pendingRequests = [];
+    var clients = [];
+    
+    var ALL_TIMES = ["09:00","09:30","10:00","10:30","11:00","11:30","12:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00"];
+    var STORAGE_CONFIRMED = "barber57_confirmed";
+    var STORAGE_PENDING = "barber57_pending";
+    var STORAGE_CLIENTS = "barber57_clients";
+    
+    function saveData() {
+        localStorage.setItem(STORAGE_CONFIRMED, JSON.stringify(confirmedAppointments));
+        localStorage.setItem(STORAGE_PENDING, JSON.stringify(pendingRequests));
+        localStorage.setItem(STORAGE_CLIENTS, JSON.stringify(clients));
+        updateUI();
+    }
+    
+    function loadData() {
+        var storedConfirmed = localStorage.getItem(STORAGE_CONFIRMED);
+        var storedPending = localStorage.getItem(STORAGE_PENDING);
+        var storedClients = localStorage.getItem(STORAGE_CLIENTS);
+        
+        confirmedAppointments = storedConfirmed ? JSON.parse(storedConfirmed) : [];
+        pendingRequests = storedPending ? JSON.parse(storedPending) : [];
+        clients = storedClients ? JSON.parse(storedClients) : [];
+        
+        updateUI();
+        updateClientDatalist();
+    }
+    
+    function updateUI() {
+        renderConfirmed();
+        renderPending();
+        renderClients();
+        
+        var totalConfirmedSpan = document.getElementById('totalConfirmed');
+        var totalClientsSpan = document.getElementById('totalClients');
+        
+        if (totalConfirmedSpan) totalConfirmedSpan.innerText = confirmedAppointments.length;
+        if (totalClientsSpan) totalClientsSpan.innerText = clients.length;
+        
+        updateTimeOptions();
+    }
+    
+    function updateClientDatalist() {
+        var datalist = document.getElementById('clientsListDatalist');
+        if (!datalist) return;
+        datalist.innerHTML = '';
+        for (var i = 0; i < clients.length; i++) {
+            var option = document.createElement('option');
+            option.value = clients[i].name;
+            datalist.appendChild(option);
+        }
+    }
+    
+    function setupClientNameSearch() {
+        var nameInput = document.getElementById('clientName');
+        var phoneInput = document.getElementById('clientPhone');
+        
+        if (!nameInput || !phoneInput) return;
+        
+        nameInput.addEventListener('input', function() {
+            var searchName = this.value.trim();
+            if (searchName) {
+                for (var i = 0; i < clients.length; i++) {
+                    if (clients[i].name.toLowerCase() === searchName.toLowerCase()) {
+                        phoneInput.value = clients[i].phone;
+                        break;
+                    }
+                }
+            }
+        });
+        
+        nameInput.addEventListener('change', function() {
+            var searchName = this.value.trim();
+            if (searchName) {
+                for (var i = 0; i < clients.length; i++) {
+                    if (clients[i].name.toLowerCase() === searchName.toLowerCase()) {
+                        phoneInput.value = clients[i].phone;
+                        break;
+                    }
+                }
+            }
+        });
+    }
+    
+    function getAvailableTimes(date) {
+        var booked = [];
+        for (var i = 0; i < confirmedAppointments.length; i++) {
+            if (confirmedAppointments[i].date === date) {
+                booked.push(confirmedAppointments[i].time);
+            }
+        }
+        
+        var available = [];
+        for (var i = 0; i < ALL_TIMES.length; i++) {
+            var found = false;
+            for (var j = 0; j < booked.length; j++) {
+                if (ALL_TIMES[i] === booked[j]) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) available.push(ALL_TIMES[i]);
+        }
+        return available;
+    }
+    
+    function isTimeAvailable(date, time, excludeId) {
+        excludeId = excludeId || null;
+        for (var i = 0; i < confirmedAppointments.length; i++) {
+            if (confirmedAppointments[i].date === date && confirmedAppointments[i].time === time && confirmedAppointments[i].id !== excludeId) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    function updateTimeOptions() {
+        var date = document.getElementById('bookingDate').value;
+        var timeSelect = document.getElementById('bookingTime');
+        if (!date || !timeSelect) return;
+        var available = getAvailableTimes(date);
+        timeSelect.innerHTML = '<option value="">Selecionar horário</option>';
+        for (var i = 0; i < available.length; i++) {
+            timeSelect.innerHTML += '<option value="' + available[i] + '">' + available[i] + '</option>';
+        }
+    }
+    
+    function renderPending() {
+        var container = document.getElementById('pendingList');
+        if (!container) return;
+        
+        if (pendingRequests.length === 0) {
+            container.innerHTML = '<div class="empty-state">✨ Nenhuma solicitação pendente</div>';
+            return;
+        }
+        
+        var html = '';
+        for (var i = 0; i < pendingRequests.length; i++) {
+            var req = pendingRequests[i];
+            html += '<div class="item-card">' +
+                '<div class="item-info">' +
+                '<h4>✂️ ' + escapeHtml(req.name) + '</h4>' +
+                '<p>📅 ' + req.date + ' ⏰ ' + req.time + '</p>' +
+                '<p style="font-size:0.65rem;">📱 ' + req.phone + '</p>' +
+                '</div>' +
+                '<div style="display:flex; gap:0.5rem;">' +
+                '<button class="confirm-btn" onclick="confirmAppointment(' + req.id + ')">✅ Confirmar</button>' +
+                '<button class="delete-btn" onclick="rejectPendingRequest(' + req.id + ')">❌ Recusar</button>' +
+                '</div>' +
+                '</div>';
+        }
+        container.innerHTML = html;
+    }
+    
+    function renderConfirmed() {
+        var container = document.getElementById('confirmedList');
+        if (!container) return;
+        
+        var searchInput = document.getElementById('searchInput');
+        var search = searchInput ? searchInput.value.toLowerCase() : '';
+        
+        var filtered = [];
+        for (var i = 0; i < confirmedAppointments.length; i++) {
+            if (confirmedAppointments[i].name.toLowerCase().indexOf(search) !== -1) {
+                filtered.push(confirmedAppointments[i]);
+            }
+        }
+        
+        filtered.sort(function(a, b) {
+            return a.date.localeCompare(b.date) || a.time.localeCompare(b.time);
+        });
+        
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="empty-state">📭 Nenhum agendamento confirmado</div>';
+            return;
+        }
+        
+        var html = '';
+        for (var i = 0; i < filtered.length; i++) {
+            var apt = filtered[i];
+            html += '<div class="item-card">' +
+                '<div class="item-info">' +
+                '<h4>✂️ ' + escapeHtml(apt.name) + '</h4>' +
+                '<p>📅 ' + apt.date + ' ⏰ ' + apt.time + '</p>' +
+                '<p style="font-size:0.65rem;">📱 ' + apt.phone + '</p>' +
+                '</div>' +
+                '<button class="delete-btn" onclick="cancelConfirmed(' + apt.id + ')">Cancelar</button>' +
+                '</div>';
+        }
+        container.innerHTML = html;
+    }
+    
+    function renderClients() {
+        var container = document.getElementById('clientsList');
+        if (!container) return;
+        
+        var searchInput = document.getElementById('searchClientInput');
+        var search = searchInput ? searchInput.value.toLowerCase() : '';
+        
+        var filtered = [];
+        for (var i = 0; i < clients.length; i++) {
+            if (clients[i].name.toLowerCase().indexOf(search) !== -1) {
+                filtered.push(clients[i]);
+            }
+        }
+        
+        filtered.sort(function(a, b) {
+            return a.name.localeCompare(b.name);
+        });
+        
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="empty-state">👥 Nenhum cliente cadastrado</div>';
+            return;
+        }
+        
+        var html = '';
+        for (var i = 0; i < filtered.length; i++) {
+            var client = filtered[i];
+            var freeCutText = (client.cutsCount || 0) >= 5 ? '<span class="free-cut-badge">🎁 5+ cortes</span>' : '';
+            html += '<div class="item-card">' +
+                '<div class="item-info">' +
+                '<h4>👤 ' + escapeHtml(client.name) + ' ' + freeCutText + '</h4>' +
+                '<p>📱 ' + client.phone + '</p>' +
+                '<p>✂️ Cortes: ' + (client.cutsCount || 0) + '</p>' +
+                '</div>' +
+                '<div style="display:flex; gap:0.5rem; flex-wrap:wrap;">' +
+                '<button class="whatsapp-btn" onclick="sendMessageToClient(\'' + client.phone + '\', \'' + escapeHtml(client.name) + '\')">💬 Mensagem</button>' +
+                '<button class="edit-client-btn" onclick="editClientById(' + client.id + ')">✏️ Editar</button>' +
+                ((client.cutsCount || 0) >= 5 ? '<button class="confirm-btn" onclick="giveFreeCutById(' + client.id + ')">🎁 Corte Grátis</button>' : '') +
+                '</div>' +
+                '</div>';
+        }
+        container.innerHTML = html;
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    // Funções de agendamento
+    function sendClientMessage(clientName, clientPhone, desiredDate, desiredTime) {
+        var message = '✂️ *57 BARBER CLUB* ✂️\n\nOlá ' + clientName + '!\n\nRecebemos sua solicitação de agendamento para o dia *' + desiredDate + '* às *' + desiredTime + '*.\n\n✅ *AGUARDE CONFIRMAÇÃO*\nAssim que o barbeiro confirmar, você receberá uma mensagem.\n\n---\n57 Barber Club - Estilo e Tradição';
+        sendWhatsApp(clientPhone, message);
+    }
+    
+    function notifyBarber(clientName, clientPhone, desiredDate, desiredTime, requestId) {
+        var barberPhone = localStorage.getItem('barber_phone');
+        if (!barberPhone) return;
+        var message = '✂️ *NOVA SOLICITAÇÃO* ✂️\n\nCliente: ' + clientName + '\nWhatsApp: ' + clientPhone + '\nHorário: ' + desiredDate + ' às ' + desiredTime + '\n\nAcesse o sistema para CONFIRMAR ou RECUSAR.';
+        sendWhatsApp(barberPhone, message);
+    }
+    
+    function createPendingRequest(name, phone, date, time) {
+        var request = {
+            id: Date.now(),
+            name: name,
+            phone: phone,
+            date: date,
+            time: time,
+            status: 'pending',
+            createdAt: new Date().toISOString()
+        };
+        pendingRequests.push(request);
+        saveData();
+        return request;
+    }
+    
+    window.confirmAppointment = function(requestId) {
+        var index = -1;
+        for (var i = 0; i < pendingRequests.length; i++) {
+            if (pendingRequests[i].id === requestId) {
+                index = i;
+                break;
+            }
+        }
+        
+        if (index === -1) {
+            showAlertModal("Erro", "Solicitação não encontrada!", null);
+            return;
+        }
+        
+        var req = pendingRequests[index];
+        
+        if (!isTimeAvailable(req.date, req.time)) {
+            showAlertModal("Horário Indisponível", 'O horário ' + req.time + ' do dia ' + req.date + ' já foi ocupado.', function() {
+                pendingRequests.splice(index, 1);
+                saveData();
+            });
+            return;
+        }
+        
+        var client = null;
+        for (var i = 0; i < clients.length; i++) {
+            if (clients[i].phone === req.phone) {
+                client = clients[i];
+                break;
+            }
+        }
+        
+        if (client) {
+            client.cutsCount = (client.cutsCount || 0) + 1;
+            saveData();
+        }
+        
+        var newApt = {
+            id: Date.now(),
+            name: req.name,
+            phone: req.phone,
+            date: req.date,
+            time: req.time,
+            confirmedAt: new Date().toISOString()
+        };
+        confirmedAppointments.push(newApt);
+        
+        var confirmMsg = '✅ *AGENDAMENTO CONFIRMADO!* ✅\n\n' + req.name + ', seu corte na 57 Barber Club está marcado para:\n\n📅 ' + req.date + '\n⏰ ' + req.time + '\n\n✂️ Chegue 5 minutos antes!\n\n---\n57 Barber Club - O melhor corte';
+        sendWhatsApp(req.phone, confirmMsg);
+        
+        pendingRequests.splice(index, 1);
+        saveData();
+        showAlertModal("✅ Confirmado!", 'Horário de ' + req.name + ' agendado com sucesso!', null);
+        updateUI();
+    };
+    
+    window.rejectPendingRequest = function(requestId) {
+        var index = -1;
+        for (var i = 0; i < pendingRequests.length; i++) {
+            if (pendingRequests[i].id === requestId) {
+                index = i;
+                break;
+            }
+        }
+        
+        if (index === -1) return;
+        var req = pendingRequests[index];
+        var rejectMsg = '❌ *SOLICITAÇÃO RECUSADA*\n\nOlá ' + req.name + ', sua solicitação para ' + req.date + ' às ' + req.time + ' foi recusada pela barbearia.\n\nPor favor, tente outro horário.';
+        sendWhatsApp(req.phone, rejectMsg);
+        pendingRequests.splice(index, 1);
+        saveData();
+        showToast('❌ Solicitação de ' + req.name + ' recusada');
+        updateUI();
+    };
+    
+    window.cancelConfirmed = function(id) {
+        var apt = null;
+        for (var i = 0; i < confirmedAppointments.length; i++) {
+            if (confirmedAppointments[i].id === id) {
+                apt = confirmedAppointments[i];
+                break;
+            }
+        }
+        
+        if (!apt) return;
+        showConfirmModal("⚠️ Cancelar", 'Cancelar agendamento de ' + apt.name + '?', function() {
+            var cancelMsg = '⚠️ *AGENDAMENTO CANCELADO*\n\nOlá ' + apt.name + ', seu horário ' + apt.date + ' às ' + apt.time + ' foi CANCELADO pela barbearia.\n\nEntre em contato para remarcar.';
+            sendWhatsApp(apt.phone, cancelMsg);
+            
+            var newConfirmed = [];
+            for (var i = 0; i < confirmedAppointments.length; i++) {
+                if (confirmedAppointments[i].id !== id) {
+                    newConfirmed.push(confirmedAppointments[i]);
+                }
+            }
+            confirmedAppointments = newConfirmed;
+            saveData();
+            showToast('❌ Agendamento de ' + apt.name + ' cancelado');
+            updateUI();
+        }, null);
+    };
+    
+    function showNewClientModal(editClient, returnToManage) {
+        editClient = editClient || null;
+        returnToManage = (returnToManage !== undefined) ? returnToManage : true;
+        
+        var modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        var isEdit = !!editClient;
+        
+        modal.innerHTML = '<div class="modal-box">' +
+            '<h3>' + (isEdit ? '✏️ Editar Cliente' : '➕ Novo Cliente') + '</h3>' +
+            '<div class="form-group"><label>👤 Nome</label><input type="text" id="clientNameModal" value="' + (isEdit ? escapeHtml(editClient.name) : '') + '" placeholder="Nome completo"></div>' +
+            '<div class="form-group"><label>📱 WhatsApp</label><input type="tel" id="clientPhoneModal" value="' + (isEdit ? editClient.phone : '') + '" placeholder="11999999999"></div>' +
+            '<div class="form-group"><label>✂️ Cortes realizados</label><input type="number" id="clientCutsModal" value="' + (isEdit ? (editClient.cutsCount || 0) : 0) + '" min="0"></div>' +
+            '<div class="modal-buttons">' +
+            '<button class="modal-btn" id="saveClientBtn">' + (isEdit ? 'Salvar Alterações' : 'Cadastrar') + '</button>' +
+            '<button class="modal-btn-secondary" id="cancelClientBtn">Cancelar</button>' +
+            '</div></div>';
+        
+        document.body.appendChild(modal);
+        
+        document.getElementById('saveClientBtn').onclick = function() {
+            var name = document.getElementById('clientNameModal').value.trim();
+            var phone = document.getElementById('clientPhoneModal').value.replace(/\D/g, '');
+            var cuts = parseInt(document.getElementById('clientCutsModal').value) || 0;
+            
+            if (name && phone.length >= 10) {
+                if (isEdit) {
+                    editClient.name = name;
+                    editClient.phone = phone;
+                    editClient.cutsCount = cuts;
+                    showToast("✅ Cliente atualizado com sucesso!");
+                } else {
+                    var existing = false;
+                    for (var i = 0; i < clients.length; i++) {
+                        if (clients[i].phone === phone) {
+                            existing = true;
+                            break;
+                        }
+                    }
+                    if (existing) {
+                        showToast("⚠️ Cliente já cadastrado!");
+                        return;
+                    }
+                    clients.push({
+                        id: Date.now(),
+                        name: name,
+                        phone: phone,
+                        cutsCount: cuts,
+                        createdAt: new Date().toISOString()
+                    });
+                    showToast("✅ Cliente cadastrado com sucesso!");
+                }
+                saveData();
+                if (modal.parentNode) modal.parentNode.removeChild(modal);
+                updateClientDatalist();
+                if (returnToManage) {
+                    switchTab('manage');
+                } else {
+                    renderClients();
+                }
+            } else {
+                showToast("❌ Preencha nome e WhatsApp válido!");
+            }
+        };
+        
+        document.getElementById('cancelClientBtn').onclick = function() {
+            if (modal.parentNode) modal.parentNode.removeChild(modal);
+            if (returnToManage) switchTab('manage');
+        };
+    }
+    
+    window.editClientById = function(id) {
+        var client = null;
+        for (var i = 0; i < clients.length; i++) {
+            if (clients[i].id === id) {
+                client = clients[i];
+                break;
+            }
+        }
+        if (client) showNewClientModal(client, false);
+    };
+    
+    window.giveFreeCutById = function(id) {
+        var client = null;
+        for (var i = 0; i < clients.length; i++) {
+            if (clients[i].id === id) {
+                client = clients[i];
+                break;
+            }
+        }
+        if (!client) return;
+        showConfirmModal("✂️ Corte Grátis!", client.name + ' já fez ' + client.cutsCount + ' cortes. Deseja oferecer um corte grátis?', function() {
+            var msg = '🎉 *CORTE GRÁTIS!* 🎉\n\nOlá ' + client.name + '! Parabéns! Você ganhou um CORTE GRÁTIS na 57 Barber Club como parte do nosso programa de fidelidade.\n\nAgende seu horário conosco! 🎊';
+            sendWhatsApp(client.phone, msg);
+            showToast('✅ Mensagem de corte grátis enviada para ' + client.name);
+        }, null);
+    };
+    
+    window.sendMessageToClient = function(phone, name) {
+        var msg = '✂️ *57 BARBER CLUB* ✂️\n\nOlá ' + name + '! Este é o sistema da barbearia.\n\nPara agendar um horário, entre em contato conosco.\n\nAgradecemos a preferência!';
+        sendWhatsApp(phone, msg);
+        showToast('📨 Mensagem enviada para ' + name);
+    };
+    
+    window.switchTab = function(tab) {
+        var bookingTab = document.getElementById('bookingTab');
+        var manageTab = document.getElementById('manageTab');
+        var clientsTab = document.getElementById('clientsTab');
+        var btns = document.querySelectorAll('.tab-btn');
+        
+        bookingTab.style.display = 'none';
+        manageTab.style.display = 'none';
+        clientsTab.style.display = 'none';
+        
+        if (tab === 'booking') {
+            bookingTab.style.display = 'block';
+            btns[0].classList.add('active');
+            btns[1].classList.remove('active');
+            btns[2].classList.remove('active');
+            updateTimeOptions();
+        } else if (tab === 'manage') {
+            manageTab.style.display = 'block';
+            btns[0].classList.remove('active');
+            btns[1].classList.add('active');
+            btns[2].classList.remove('active');
+            renderConfirmed();
+        } else {
+            clientsTab.style.display = 'block';
+            btns[0].classList.remove('active');
+            btns[1].classList.remove('active');
+            btns[2].classList.add('active');
+            renderClients();
+        }
+    };
+    
+    // Eventos do formulário
+    var form = document.getElementById('bookingForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            var name = document.getElementById('clientName').value.trim();
+            var phone = document.getElementById('clientPhone').value.replace(/\D/g, '');
+            var date = document.getElementById('bookingDate').value;
+            var time = document.getElementById('bookingTime').value;
+            
+            if (!name || !phone || !date || !time) {
+                showToast('❌ Preencha todos os campos!');
+                return;
+            }
+            
+            if (phone.length < 10) {
+                showToast('❌ WhatsApp inválido! Ex: 11999999999');
+                return;
+            }
+            
+            var today = new Date().toISOString().split('T')[0];
+            if (date < today) {
+                showToast('❌ Data inválida! Escolha hoje ou futuro.');
+                return;
+            }
+            
+            if (!isTimeAvailable(date, time)) {
+                showToast('❌ Horário ' + time + ' do dia ' + date + ' já está ocupado!');
+                return;
+            }
+            
+            var existingClient = false;
+            for (var i = 0; i < clients.length; i++) {
+                if (clients[i].phone === phone) {
+                    existingClient = true;
+                    break;
+                }
+            }
+            
+            if (!existingClient) {
+                clients.push({
+                    id: Date.now(),
+                    name: name,
+                    phone: phone,
+                    cutsCount: 0,
+                    createdAt: new Date().toISOString()
+                });
+                saveData();
+                updateClientDatalist();
+            }
+            
+            var request = createPendingRequest(name, phone, date, time);
+            sendClientMessage(name, phone, date, time);
+            notifyBarber(name, phone, date, time, request.id);
+            showToast('📨 Solicitação enviada! Barbeiro será notificado.');
+            
+            document.getElementById('clientName').value = '';
+            document.getElementById('clientPhone').value = '';
+            document.getElementById('bookingTime').value = '';
+            switchTab('manage');
+        });
+    }
+    
+    var dateInput = document.getElementById('bookingDate');
+    if (dateInput) {
+        var todayDate = new Date().toISOString().split('T')[0];
+        dateInput.min = todayDate;
+        dateInput.value = todayDate;
+        dateInput.addEventListener('change', updateTimeOptions);
+    }
+    
+    var searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.addEventListener('input', function() { renderConfirmed(); });
+    
+    var searchClientInput = document.getElementById('searchClientInput');
+    if (searchClientInput) searchClientInput.addEventListener('input', function() { renderClients(); });
+    
+    var clearAllBtn = document.getElementById('clearAllBtn');
+    if (clearAllBtn) {
+        clearAllBtn.addEventListener('click', function() {
+            if (confirm('⚠️ ATENÇÃO: Isso apagará TODOS os agendamentos confirmados!')) {
+                confirmedAppointments = [];
+                saveData();
+                showToast('🗑️ Todos os agendamentos foram removidos');
+                renderConfirmed();
+            }
+        });
+    }
+    
+    var newClientBtn = document.getElementById('newClientBtn');
+    if (newClientBtn) newClientBtn.addEventListener('click', function() { showNewClientModal(null, false); });
+    
+    var quickNewClientBtn = document.getElementById('quickNewClientBtn');
+    if (quickNewClientBtn) quickNewClientBtn.addEventListener('click', function() { showNewClientModal(null, true); });
+    
+    // INICIALIZAÇÃO - Mostrar splash por 2 segundos
+    setTimeout(function() {
+        hideSplashAndShowContent();
+    }, 2000);
+    
+    setTimeout(function() {
+        initializeSystem();
+    }, 2200);
+</script>
+</body>
+</html>
