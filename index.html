@@ -1,77 +1,124 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <!-- 
+        ============================================
+        CABEÇALHO DA PÁGINA (METADADOS)
+        ============================================
+        Define configurações importantes para o navegador e dispositivos móveis
+    -->
+    
+    <!-- Define o conjunto de caracteres como UTF-8 (suporte a acentos e caracteres especiais) -->
     <meta charset="UTF-8">
+    
+    <!-- 
+        Configura a viewport (área visível da página) para telas responsivas
+        width=device-width: largura igual à tela do dispositivo
+        initial-scale=1.0: zoom inicial normal
+        user-scalable=yes: permite o usuário dar zoom
+        viewport-fit=cover: preenche toda a tela (especialmente útil em iPhones)
+    -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    
+    <!-- Permite que o site seja adicionado à tela inicial do iPhone como um app -->
     <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!-- Define a cor da barra de status no iPhone -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Define a cor da barra de endereço no Chrome para Android -->
     <meta name="theme-color" content="#0A0A0A">
+    
+    <!-- Permite que o site seja instalado como app no Android -->
     <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Título que aparece na aba do navegador -->
     <title>57 Barber Club | Sistema de Agendamento</title>
+    
     <style>
+        /* 
+            ============================================
+            ESTILOS CSS (APARÊNCIA DA PÁGINA)
+            ============================================
+            Define como todos os elementos vão aparecer visualmente
+        */
+        
+        /* Remove margens e espaçamentos padrão de todos os elementos */
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box; /* Faz com que largura inclua bordas e padding */
+            -webkit-tap-highlight-color: transparent; /* Remove o fundo cinza ao tocar no celular */
         }
 
+        /* Estilos para o HTML e BODY (estrutura principal da página) */
         html, body {
-            width: 100%;
-            height: 100%;
+            width: 100%;      /* Largura total da tela */
+            height: 100%;     /* Altura total da tela */
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Esconde rolagem horizontal */
+            background: #0A0A0A; /* Fundo preto escuro */
         }
 
+        /* Estilo principal do corpo da página */
         body {
-            background: #0A0A0A;
-            color: #E8E6E1;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Poppins', 'Inter', system-ui, 'Helvetica Neue', sans-serif;
-            overflow-y: auto;
-            overflow-x: hidden;
-            min-height: 100%;
+            color: #E8E6E1;                    /* Cor do texto (branco suave) */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Poppins', 'Inter', system-ui; /* Fontes modernas */
+            overflow-y: auto;                  /* Permite rolagem vertical */
+            min-height: 100%;                  /* Altura mínima total */
         }
 
+        /* 
+            Efeito de fundo com logo em baixa opacidade
+            ::before é um pseudo-elemento que cria uma camada antes do conteúdo
+        */
         body::before {
-            content: '';
-            position: fixed;
+            content: '';                       /* Necessário para pseudo-elemento existir */
+            position: fixed;                  /* Fica fixo na tela mesmo rolando */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 50%); /* Efeito gradiente dourado suave */
+            pointer-events: none;              /* Permite clicar através do elemento */
+            z-index: 0;                        /* Fica atrás de tudo */
         }
 
-        /* TELA DE BOAS-VINDAS */
+        /* ============================================ */
+        /* TELA DE BOAS-VINDAS (SPLASH SCREEN)         */
+        /* ============================================ */
+        
+        /* Tela que aparece nos primeiros segundos ao abrir o app */
         .splash-screen {
-            position: fixed;
+            position: fixed;           /* Fica fixa na tela */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0A0A0A 0%, #1A1208 50%, #0A0A0A 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-            opacity: 1;
+            background: linear-gradient(135deg, #0A0A0A 0%, #1A1208 50%, #0A0A0A 100%); /* Gradiente com tom dourado */
+            display: flex;             /* Usa flexbox para centralizar */
+            justify-content: center;   /* Centraliza horizontalmente */
+            align-items: center;       /* Centraliza verticalmente */
+            z-index: 9999;            /* Fica acima de tudo */
+            transition: opacity 0.5s ease; /* Animação suave ao desaparecer */
+            opacity: 1;               /* Totalmente visível */
         }
 
+        /* Conteúdo da tela de boas-vindas */
         .splash-content {
-            text-align: center;
-            animation: fadeInUpScale 0.8s ease-out;
+            text-align: center;        /* Texto centralizado */
+            animation: fadeInUpScale 0.8s ease-out; /* Animação de entrada */
             padding: 20px;
         }
 
+        /* Container do logo com anel giratório */
         .splash-logo-container {
             position: relative;
             margin-bottom: 2rem;
         }
 
+        /* Anel giratório ao redor do logo */
         .splash-logo-ring {
             position: absolute;
             top: 50%;
@@ -81,14 +128,16 @@
             height: 180px;
             border-radius: 50%;
             background: linear-gradient(135deg, #D4AF37, #FFE88C, #D4AF37);
-            animation: rotateRing 3s linear infinite;
+            animation: rotateRing 3s linear infinite; /* Rotação infinita */
         }
 
+        /* Animação de rotação do anel */
         @keyframes rotateRing {
             0% { transform: translate(-50%, -50%) rotate(0deg); }
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
+        /* Buraco no meio do anel (efeito de vazio) */
         .splash-logo-ring::before {
             content: '';
             position: absolute;
@@ -100,6 +149,7 @@
             background: #0A0A0A;
         }
 
+        /* Logo central */
         .splash-logo {
             position: relative;
             width: 160px;
@@ -111,9 +161,10 @@
             align-items: center;
             justify-content: center;
             z-index: 2;
-            box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.4); /* Brilho dourado */
         }
 
+        /* Número 57 dentro do logo */
         .splash-logo span {
             font-size: 4rem;
             font-weight: 800;
@@ -121,6 +172,7 @@
             letter-spacing: 2px;
         }
 
+        /* Título "BARBER CLUB" com efeito brilhante */
         .splash-title {
             font-size: 2.5rem;
             font-weight: 800;
@@ -130,23 +182,25 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            animation: shimmer 2s infinite;
+            animation: shimmer 2s infinite; /* Brilho que se move */
             margin-bottom: 0.5rem;
         }
 
+        /* Animação do brilho no título */
         @keyframes shimmer {
             0% { background-position: 0% center; }
             100% { background-position: 200% center; }
         }
 
+        /* Subtítulo */
         .splash-sub {
             color: #D4AF37;
             font-size: 0.9rem;
             letter-spacing: 6px;
             text-transform: uppercase;
-            margin-bottom: 0.5rem;
         }
 
+        /* Linha decorativa */
         .splash-divider {
             width: 60px;
             height: 2px;
@@ -154,12 +208,14 @@
             margin: 1rem auto;
         }
 
+        /* Texto de slogan */
         .splash-tagline {
             font-size: 0.7rem;
             color: #888;
             letter-spacing: 2px;
         }
 
+        /* Animação de entrada da tela de boas-vindas */
         @keyframes fadeInUpScale {
             from {
                 opacity: 0;
@@ -171,7 +227,11 @@
             }
         }
 
-        /* MAIN CONTENT - INICIALMENTE ESCONDIDO */
+        /* ============================================ */
+        /* CONTEÚDO PRINCIPAL DO SISTEMA                */
+        /* ============================================ */
+        
+        /* O conteúdo principal começa invisível e aparece após o splash */
         .main-content {
             opacity: 0;
             visibility: hidden;
@@ -183,26 +243,32 @@
             display: block;
         }
 
+        /* Quando a classe 'visible' é adicionada, o conteúdo aparece */
         .main-content.visible {
             opacity: 1;
             visibility: visible;
         }
 
+        /* Container centralizado que limita a largura máxima */
         .container {
-            max-width: 550px;
-            margin: 0 auto;
+            max-width: 550px;      /* Largura máxima confortável para leitura */
+            margin: 0 auto;        /* Centraliza na tela */
             padding: 1rem;
             width: 100%;
         }
 
+        /* ============================================ */
+        /* CABEÇALHO COM LOGO                          */
+        /* ============================================ */
+        
         .header {
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 1.5rem;
             padding: 0.8rem;
-            background: rgba(18, 18, 18, 0.9);
-            backdrop-filter: blur(10px);
+            background: rgba(18, 18, 18, 0.9);    /* Fundo semi-transparente */
+            backdrop-filter: blur(10px);           /* Efeito vidro fosco */
             border-radius: 50px;
             border: 1px solid rgba(212, 175, 55, 0.2);
         }
@@ -238,9 +304,13 @@
             color: #D4AF37;
         }
 
+        /* ============================================ */
+        /* MENU DE NAVEGAÇÃO (ABAS)                    */
+        /* ============================================ */
+        
         .nav-tabs {
             display: flex;
-            gap: 0.8rem;
+            gap: 0.5rem;
             margin-bottom: 1.5rem;
             background: rgba(18, 18, 18, 0.9);
             backdrop-filter: blur(10px);
@@ -248,24 +318,31 @@
             border-radius: 60px;
         }
 
+        /* Botões das abas */
         .tab-btn {
-            flex: 1;
-            padding: 0.7rem;
+            flex: 1;                      /* Ocupa espaço igualmente */
+            padding: 0.7rem 0.3rem;
             background: transparent;
             border: none;
             color: #AAA;
             font-weight: 600;
             border-radius: 40px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             transition: all 0.2s;
+            text-align: center;
         }
 
+        /* Aba ativa (selecionada) */
         .tab-btn.active {
             background: linear-gradient(135deg, #D4AF37, #B8921E);
             color: #0A0A0A;
         }
 
+        /* ============================================ */
+        /* CARDS (CAIXAS DE CONTEÚDO)                  */
+        /* ============================================ */
+        
         .card {
             background: rgba(18, 18, 18, 0.95);
             backdrop-filter: blur(10px);
@@ -278,11 +355,15 @@
         .card h2, .card h3 {
             font-size: 1.2rem;
             margin-bottom: 1rem;
-            border-left: 3px solid #D4AF37;
+            border-left: 3px solid #D4AF37;  /* Detalhe dourado na esquerda */
             padding-left: 0.7rem;
             color: #D4AF37;
         }
 
+        /* ============================================ */
+        /* FORMULÁRIOS (CAMPOS DE INPUT)               */
+        /* ============================================ */
+        
         .form-group {
             margin-bottom: 1rem;
         }
@@ -305,16 +386,16 @@
             outline: none;
         }
 
+        /* Efeito de foco (quando o campo é selecionado) */
         input:focus, select:focus {
             border-color: #D4AF37;
             box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
         }
 
-        datalist {
-            background: #1E1E1E;
-            border-radius: 16px;
-        }
-
+        /* ============================================ */
+        /* BOTÕES                                       */
+        /* ============================================ */
+        
         .btn {
             background: linear-gradient(95deg, #D4AF37, #B8921E);
             border: none;
@@ -326,36 +407,59 @@
             cursor: pointer;
             width: 100%;
             transition: transform 0.1s;
+            margin-bottom: 0.5rem;
+            text-align: center;
         }
-
+        
+        /* Efeito ao clicar (aperta o botão) */
         .btn:active {
             transform: scale(0.98);
         }
-
+        
+        /* Botão secundário (estilo alternativo) */
         .btn-secondary {
             background: #2A2A2A;
             color: #D4AF37;
             border: 1px solid #D4AF37;
         }
+        
+        /* Botão de perigo (vermelho) */
+        .btn-danger {
+            background: #2A1A1A;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+        
+        /* Grupo de botões (para colocar lado a lado) */
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .btn-group .btn {
+            margin-bottom: 0;
+        }
 
+        /* ============================================ */
+        /* LISTAS DE ITENS (AGENDAMENTOS, CLIENTES)    */
+        /* ============================================ */
+        
+        /* Container com rolagem para listas grandes */
         .list-container {
             max-height: 400px;
             overflow-y: auto;
         }
 
+        /* Cada item da lista */
         .item-card {
             background: #1E1E1E;
             margin-bottom: 0.7rem;
             padding: 0.8rem;
             border-radius: 16px;
-            border-left: 4px solid #D4AF37;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            border-left: 4px solid #D4AF37;  /* Detalhe dourado na esquerda */
         }
 
+        /* Informações do item */
         .item-info h4 {
             font-size: 0.95rem;
             margin-bottom: 0.2rem;
@@ -366,26 +470,41 @@
             color: #D4AF37;
         }
 
-        .confirm-btn, .whatsapp-btn, .edit-client-btn {
+        /* Container dos botões de ação dentro do item */
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Botões de ação pequenos (Confirmar, Cancelar, etc) */
+        .btn-action {
             background: rgba(212, 175, 55, 0.2);
             border: 1px solid #D4AF37;
             padding: 0.3rem 0.8rem;
             border-radius: 30px;
             color: #D4AF37;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
+            transition: all 0.2s;
         }
 
-        .delete-btn {
-            background: rgba(210, 65, 65, 0.2);
-            border: 1px solid #8B3A3A;
-            padding: 0.3rem 0.8rem;
-            border-radius: 30px;
-            color: #FF8888;
-            cursor: pointer;
-            font-size: 0.75rem;
+        /* Botão de concluir (verde) */
+        .btn-complete {
+            background: rgba(46, 204, 113, 0.2);
+            border-color: #2ecc71;
+            color: #2ecc71;
         }
 
+        /* Botão de cancelar (vermelho) */
+        .btn-cancel {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+        
+        /* Distintivo de cliente fiel (5+ cortes) */
         .free-cut-badge {
             background: #D4AF37;
             color: #0A0A0A;
@@ -396,23 +515,39 @@
             margin-left: 0.5rem;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 1.5rem;
-            color: #666;
-            font-size: 0.85rem;
+        /* ============================================ */
+        /* ESTATÍSTICAS (CARDS NA TELA PRINCIPAL)      */
+        /* ============================================ */
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .stats {
+        .stat-card {
             background: #1A1A1A;
-            padding: 0.4rem;
+            padding: 0.8rem;
+            border-radius: 16px;
             text-align: center;
-            border-radius: 30px;
-            margin-bottom: 1rem;
-            font-size: 0.8rem;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
             color: #D4AF37;
         }
 
+        .stat-label {
+            font-size: 0.7rem;
+            color: #888;
+        }
+
+        /* ============================================ */
+        /* MODAIS (JANELAS POPUP)                      */
+        /* ============================================ */
+        
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -442,12 +577,6 @@
             margin-bottom: 0.8rem;
         }
 
-        .modal-box p {
-            margin-bottom: 1.2rem;
-            color: #CCC;
-            font-size: 0.9rem;
-        }
-
         .modal-buttons {
             display: flex;
             gap: 0.8rem;
@@ -473,24 +602,10 @@
             cursor: pointer;
         }
 
-        .times-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .time-btn {
-            background: #2A2A2A;
-            border: 1px solid #D4AF37;
-            padding: 0.6rem;
-            border-radius: 40px;
-            color: #D4AF37;
-            cursor: pointer;
-            font-size: 0.8rem;
-            text-align: center;
-        }
-
+        /* ============================================ */
+        /* TOAST (NOTIFICAÇÕES TEMPORÁRIAS)            */
+        /* ============================================ */
+        
         .toast-msg {
             position: fixed;
             bottom: 20px;
@@ -507,6 +622,7 @@
             white-space: nowrap;
         }
 
+        /* Animação do toast subindo */
         @keyframes slideUp {
             from {
                 opacity: 0;
@@ -518,6 +634,10 @@
             }
         }
 
+        /* ============================================ */
+        /* RODAPÉ                                      */
+        /* ============================================ */
+        
         .footer {
             text-align: center;
             padding: 1rem;
@@ -531,12 +651,18 @@
             text-decoration: none;
         }
 
+        /* ============================================ */
+        /* RESPONSIVIDADE (TELAS PEQUENAS)             */
+        /* ============================================ */
+        
         @media (max-width: 480px) {
             .container { padding: 0.7rem; }
             .card { padding: 1rem; }
-            .tab-btn { padding: 0.5rem; font-size: 0.75rem; }
-            .times-grid { grid-template-columns: repeat(2, 1fr); }
-            .splash-title { font-size: 1.8rem; letter-spacing: 2px; }
+            .tab-btn { padding: 0.5rem; font-size: 0.65rem; }
+            .stats-grid { grid-template-columns: 1fr; }  /* Empilha os cards */
+            .item-actions { flex-direction: column; }    /* Botões em coluna */
+            .btn-action { width: 100%; text-align: center; }
+            .splash-title { font-size: 1.8rem; }
             .splash-logo { width: 120px; height: 120px; }
             .splash-logo span { font-size: 2.8rem; }
             .splash-logo-ring { width: 140px; height: 140px; }
@@ -545,780 +671,676 @@
 </head>
 <body>
 
-<!-- TELA DE BOAS-VINDAS -->
-<div class="splash-screen" id="splashScreen">
-    <div class="splash-content">
-        <div class="splash-logo-container">
-            <div class="splash-logo-ring"></div>
-            <div class="splash-logo">
-                <span>57</span>
+    <!-- ============================================ -->
+    <!-- TELA DE BOAS-VINDAS (SPLASH)                 -->
+    <!-- ============================================ -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-content">
+            <div class="splash-logo-container">
+                <div class="splash-logo-ring"></div>
+                <div class="splash-logo">
+                    <span>57</span>
+                </div>
             </div>
+            <div class="splash-title">BARBER CLUB</div>
+            <div class="splash-sub">Premium Barbershop</div>
+            <div class="splash-divider"></div>
+            <div class="splash-tagline">ESTILO • TRADIÇÃO • FUTURO</div>
         </div>
-        <div class="splash-title">BARBER CLUB</div>
-        <div class="splash-sub">Premium Barbershop</div>
-        <div class="splash-divider"></div>
-        <div class="splash-tagline">ESTILO • TRADIÇÃO • FUTURO</div>
     </div>
-</div>
 
-<!-- CONTEÚDO PRINCIPAL -->
-<div class="main-content" id="mainContent">
-    <div class="container">
-        <div class="header">
-            <div class="logo-area">
-                <div class="logo-number">57</div>
-                <div class="logo-text">
-                    <div class="barber">BARBER</div>
-                    <div class="club">CLUB</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="nav-tabs">
-            <button class="tab-btn" onclick="switchTab('booking')">✂️ AGENDAR</button>
-            <button class="tab-btn active" onclick="switchTab('manage')">📋 GERENCIAR</button>
-            <button class="tab-btn" onclick="switchTab('clients')">👥 CLIENTES</button>
-        </div>
-
-        <div id="bookingTab" style="display: none;">
-            <div class="card">
-                <h2>📝 Novo Agendamento</h2>
-                <form id="bookingForm">
-                    <div class="form-group">
-                        <label>👤 Nome do Cliente (ou digite para buscar)</label>
-                        <input type="text" id="clientName" list="clientsListDatalist" placeholder="Digite o nome ou selecione" autocomplete="off" required>
-                        <datalist id="clientsListDatalist"></datalist>
-                    </div>
-                    <div class="form-group">
-                        <label>📞 WhatsApp (com DDD)</label>
-                        <input type="tel" id="clientPhone" placeholder="11999999999" required>
-                    </div>
-                    <div class="form-group">
-                        <label>📅 Data</label>
-                        <input type="date" id="bookingDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label>⏰ Horário</label>
-                        <select id="bookingTime" required><option value="">Selecionar</option></select>
-                    </div>
-                    <button type="submit" class="btn">📲 Enviar Mensagem ao Cliente</button>
-                </form>
-            </div>
-            <div class="card"><h3>⏳ Solicitações Pendentes</h3><div id="pendingList" class="list-container"></div></div>
-        </div>
-
-        <div id="manageTab" style="display: block;">
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <h2>✅ Agendamentos Confirmados</h2>
-                    <button id="quickNewClientBtn" class="btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; width: auto;">➕ Novo Cliente</button>
-                </div>
-                <div class="stats">Total: <span id="totalConfirmed">0</span> agendamentos</div>
-                <input type="text" id="searchInput" placeholder="🔍 Buscar cliente..." style="margin-bottom: 1rem;">
-                <div id="confirmedList" class="list-container"></div>
-                <button id="clearAllBtn" class="btn btn-secondary" style="margin-top: 1rem;">🗑️ Limpar Todos</button>
-            </div>
-        </div>
-
-        <div id="clientsTab" style="display: none;">
-            <div class="card">
-                <h2>👥 Clientes Cadastrados</h2>
-                <div class="stats">Total: <span id="totalClients">0</span> clientes</div>
-                <input type="text" id="searchClientInput" placeholder="🔍 Buscar cliente..." style="margin-bottom: 1rem;">
-                <div id="clientsList" class="list-container"></div>
-                <button id="newClientBtn" class="btn" style="margin-top: 1rem;">➕ Novo Cliente</button>
-            </div>
-        </div>
-
-        <div class="footer">desenvolvido por <a href="#">TechVision</a> © 2026</div>
-    </div>
-</div>
-
-<script>
-    // Função para esconder splash screen e mostrar conteúdo
-    function hideSplashAndShowContent() {
-        var splash = document.getElementById('splashScreen');
-        var main = document.getElementById('mainContent');
-        
-        if (splash && main) {
-            splash.style.opacity = '0';
-            setTimeout(function() {
-                splash.style.display = 'none';
-                main.classList.add('visible');
-            }, 500);
-        }
-    }
-
-    // Verificar se é a primeira execução
-    function initializeSystem() {
-        var barberPhone = localStorage.getItem('barber_phone');
-        var barberName = localStorage.getItem('barber_name');
-        
-        if (!barberPhone || !barberName) {
-            setTimeout(function() {
-                showBarberRegistrationModal();
-            }, 300);
-        } else {
-            loadData();
-            updateTimeOptions();
-            setupClientNameSearch();
-        }
-    }
-    
-    // Modal de cadastro do barbeiro
-    function showBarberRegistrationModal() {
-        var modal = document.createElement('div');
-        modal.className = 'modal-overlay';
-        modal.innerHTML = `
-            <div class="modal-box">
-                <h3>✂️ Bem-vindo ao 57 Barber Club!</h3>
-                <p>Faça seu pré-cadastro para começar</p>
-                <div class="form-group">
-                    <label>👤 Seu Nome</label>
-                    <input type="text" id="barberNameInput" placeholder="Seu Nome">
-                </div>
-                <div class="form-group">
-                    <label>📱 Seu WhatsApp (com DDD)</label>
-                    <input type="tel" id="barberPhoneInput" placeholder="Seu WhatsApp">
-                </div>
-                <div class="modal-buttons">
-                    <button class="modal-btn" id="saveBarberBtn">Salvar</button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        
-        document.getElementById('saveBarberBtn').onclick = function() {
-            var name = document.getElementById('barberNameInput').value.trim();
-            var phone = document.getElementById('barberPhoneInput').value.replace(/\D/g, '');
+    <!-- ============================================ -->
+    <!-- CONTEÚDO PRINCIPAL DO SISTEMA                -->
+    <!-- ============================================ -->
+    <div class="main-content" id="mainContent">
+        <div class="container">
             
-            if (name && phone.length >= 10) {
-                localStorage.setItem('barber_name', name);
-                localStorage.setItem('barber_phone', phone);
-                modal.remove();
-                showToast('✅ Cadastro realizado com sucesso!');
-                loadData();
-                updateTimeOptions();
-                setupClientNameSearch();
-            } else {
-                showToast('❌ Preencha todos os campos corretamente!');
-            }
-        };
-    }
-    
-    // Funções auxiliares
-    function showToast(msg) {
-        var toast = document.createElement('div');
-        toast.className = 'toast-msg';
-        toast.textContent = msg;
-        document.body.appendChild(toast);
-        setTimeout(function() { 
-            if (toast.parentNode) toast.parentNode.removeChild(toast); 
-        }, 2500);
-    }
-    
-    function showAlertModal(title, message, onClose) {
-        var modal = document.createElement('div');
-        modal.className = 'modal-overlay';
-        modal.innerHTML = `
-            <div class="modal-box">
-                <h3>${title}</h3>
-                <p>${message}</p>
-                <button class="modal-btn" id="modalOkBtn">OK</button>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        document.getElementById('modalOkBtn').onclick = function() {
-            if (modal.parentNode) modal.parentNode.removeChild(modal);
-            if (onClose) onClose();
-        };
-    }
-    
-    function showConfirmModal(title, message, onConfirm, onCancel) {
-        var modal = document.createElement('div');
-        modal.className = 'modal-overlay';
-        modal.innerHTML = `
-            <div class="modal-box">
-                <h3>${title}</h3>
-                <p>${message}</p>
-                <div class="modal-buttons">
-                    <button class="modal-btn" id="modalConfirmBtn">Sim</button>
-                    <button class="modal-btn-secondary" id="modalCancelBtn">Não</button>
+            <!-- CABEÇALHO COM LOGO -->
+            <div class="header">
+                <div class="logo-area">
+                    <div class="logo-number">57</div>
+                    <div class="logo-text">
+                        <div class="barber">BARBER</div>
+                        <div class="club">CLUB</div>
+                    </div>
                 </div>
             </div>
-        `;
-        document.body.appendChild(modal);
-        document.getElementById('modalConfirmBtn').onclick = function() {
-            if (modal.parentNode) modal.parentNode.removeChild(modal);
-            if (onConfirm) onConfirm();
-        };
-        document.getElementById('modalCancelBtn').onclick = function() {
-            if (modal.parentNode) modal.parentNode.removeChild(modal);
-            if (onCancel) onCancel();
-        };
-    }
-    
-    function formatPhone(phone) {
-        var cleaned = phone.replace(/\D/g, '');
-        if (!cleaned.startsWith('55')) cleaned = '55' + cleaned;
-        return cleaned;
-    }
-    
-    function sendWhatsApp(phone, message) {
-        var formattedPhone = formatPhone(phone);
-        var url = 'https://wa.me/' + formattedPhone + '?text=' + encodeURIComponent(message);
-        window.open(url, '_blank');
-        return true;
-    }
-    
-    // Variáveis globais
-    var confirmedAppointments = [];
-    var pendingRequests = [];
-    var clients = [];
-    
-    var ALL_TIMES = ["09:00","09:30","10:00","10:30","11:00","11:30","12:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00"];
-    var STORAGE_CONFIRMED = "barber57_confirmed";
-    var STORAGE_PENDING = "barber57_pending";
-    var STORAGE_CLIENTS = "barber57_clients";
-    
-    function saveData() {
-        localStorage.setItem(STORAGE_CONFIRMED, JSON.stringify(confirmedAppointments));
-        localStorage.setItem(STORAGE_PENDING, JSON.stringify(pendingRequests));
-        localStorage.setItem(STORAGE_CLIENTS, JSON.stringify(clients));
-        updateUI();
-    }
-    
-    function loadData() {
-        var storedConfirmed = localStorage.getItem(STORAGE_CONFIRMED);
-        var storedPending = localStorage.getItem(STORAGE_PENDING);
-        var storedClients = localStorage.getItem(STORAGE_CLIENTS);
+
+            <!-- MENU DE NAVEGAÇÃO (ABAS) -->
+            <div class="nav-tabs">
+                <button class="tab-btn" onclick="switchTab('booking')">✂️ AGENDAR</button>
+                <button class="tab-btn active" onclick="switchTab('manage')">📋 AGENDAMENTOS</button>
+                <button class="tab-btn" onclick="switchTab('history')">📜 HISTÓRICO</button>
+                <button class="tab-btn" onclick="switchTab('clients')">👥 CLIENTES</button>
+                <button class="tab-btn" onclick="switchTab('settings')">⚙️ CONFIG</button>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- ABA 1: AGENDAR NOVO HORÁRIO                  -->
+            <!-- ============================================ -->
+            <div id="bookingTab" style="display: none;">
+                <div class="card">
+                    <h2>📝 Novo Agendamento</h2>
+                    <form id="bookingForm">
+                        <!-- Campo: Nome do Cliente (com busca automática) -->
+                        <div class="form-group">
+                            <label>👤 Nome do Cliente (digite para buscar)</label>
+                            <input type="text" id="clientName" list="clientsListDatalist" placeholder="Digite o nome ou selecione" autocomplete="off" required>
+                            <!-- Datalist: lista de sugestões de clientes cadastrados -->
+                            <datalist id="clientsListDatalist"></datalist>
+                        </div>
+                        <!-- Campo: WhatsApp -->
+                        <div class="form-group">
+                            <label>📞 WhatsApp (com DDD)</label>
+                            <input type="tel" id="clientPhone" placeholder="11999999999" required>
+                        </div>
+                        <!-- Campo: Data do Agendamento -->
+                        <div class="form-group">
+                            <label>📅 Data</label>
+                            <input type="date" id="bookingDate" required>
+                        </div>
+                        <!-- Campo: Horário -->
+                        <div class="form-group">
+                            <label>⏰ Horário</label>
+                            <select id="bookingTime" required><option value="">Selecionar</option></select>
+                        </div>
+                        <!-- Botão de envio -->
+                        <button type="submit" class="btn">✅ Agendar e Confirmar</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- ABA 2: GERENCIAR AGENDAMENTOS                -->
+            <!-- ============================================ -->
+            <div id="manageTab" style="display: block;">
+                <div class="card">
+                    <!-- Título e botão rápido para adicionar cliente -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
+                        <h2>✅ Agendamentos</h2>
+                        <button id="quickNewClientBtn" class="btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.7rem; width: auto;">➕ Novo Cliente</button>
+                    </div>
+                    
+                    <!-- Cards de estatísticas (hoje e semana) -->
+                    <div class="stats-grid" id="statsGrid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="todayCount">0</div>
+                            <div class="stat-label">Hoje</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="weekCount">0</div>
+                            <div class="stat-label">Esta Semana</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Campo de busca para filtrar agendamentos -->
+                    <input type="text" id="searchInput" placeholder="🔍 Buscar cliente..." style="margin-bottom: 1rem;">
+                    
+                    <!-- Lista de agendamentos -->
+                    <div id="confirmedList" class="list-container"></div>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- ABA 3: HISTÓRICO DE ATENDIMENTOS             -->
+            <!-- ============================================ -->
+            <div id="historyTab" style="display: none;">
+                <div class="card">
+                    <h2>📜 Histórico de Atendimentos</h2>
+                    <div class="stats">Total: <span id="totalHistory">0</span> atendimentos</div>
+                    <input type="text" id="searchHistoryInput" placeholder="🔍 Buscar no histórico..." style="margin-bottom: 1rem;">
+                    <div id="historyList" class="list-container"></div>
+                    <button id="clearHistoryBtn" class="btn btn-danger">🗑️ Limpar Histórico</button>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- ABA 4: CLIENTES CADASTRADOS                  -->
+            <!-- ============================================ -->
+            <div id="clientsTab" style="display: none;">
+                <div class="card">
+                    <h2>👥 Clientes Cadastrados</h2>
+                    <div class="stats">Total: <span id="totalClients">0</span> clientes</div>
+                    <input type="text" id="searchClientInput" placeholder="🔍 Buscar cliente..." style="margin-bottom: 1rem;">
+                    <div id="clientsList" class="list-container"></div>
+                    <button id="newClientBtn" class="btn" style="margin-top: 1rem;">➕ Novo Cliente</button>
+                </div>
+            </div>
+            
+            <!-- ============================================ -->
+            <!-- ABA 5: CONFIGURAÇÕES / BACKUP               -->
+            <!-- ============================================ -->
+            <div id="settingsTab" style="display: none;">
+                <div class="card">
+                    <h2>⚙️ Backup e Configurações</h2>
+                    <p style="font-size: 0.8rem; margin-bottom: 1rem; color: #ccc;">Salve seus dados para transferir para outro celular ou fazer uma cópia de segurança.</p>
+                    <button id="exportDataBtn" class="btn">📤 EXPORTAR DADOS (Backup)</button>
+                    <div class="btn-group">
+                        <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                        <button id="importDataBtn" class="btn btn-secondary">📥 IMPORTAR DADOS (Restaurar)</button>
+                    </div>
+                    <hr style="margin: 1rem 0; border-color: #333;">
+                    <button id="resetAllDataBtn" class="btn btn-danger">⚠️ LIMPAR TODOS OS DADOS</button>
+                </div>
+            </div>
+
+            <!-- RODAPÉ -->
+            <div class="footer">desenvolvido por <a href="#">TechVision</a> © 2026</div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- JAVASCRIPT (FUNCIONALIDADES DO SISTEMA)      -->
+    <!-- ============================================ -->
+    <script>
+        // ============================================
+        // BLOCO 1: VARIÁVEIS GLOBAIS E CONSTANTES
+        // ============================================
+        // Essas variáveis armazenam os dados principais do sistema
         
-        confirmedAppointments = storedConfirmed ? JSON.parse(storedConfirmed) : [];
-        pendingRequests = storedPending ? JSON.parse(storedPending) : [];
-        clients = storedClients ? JSON.parse(storedClients) : [];
+        // Lista de agendamentos futuros/confirmados
+        var appointments = [];      
         
-        updateUI();
-        updateClientDatalist();
-    }
-    
-    function updateUI() {
-        renderConfirmed();
-        renderPending();
-        renderClients();
+        // Lista de histórico de atendimentos já concluídos
+        var history = [];           
         
-        var totalConfirmedSpan = document.getElementById('totalConfirmed');
-        var totalClientsSpan = document.getElementById('totalClients');
+        // Lista de clientes cadastrados
+        var clients = [];
         
-        if (totalConfirmedSpan) totalConfirmedSpan.innerText = confirmedAppointments.length;
-        if (totalClientsSpan) totalClientsSpan.innerText = clients.length;
+        // Lista de horários disponíveis (das 9h às 19h, a cada 30 minutos)
+        var ALL_TIMES = ["09:00","09:30","10:00","10:30","11:00","11:30","12:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00"];
         
-        updateTimeOptions();
-    }
-    
-    function updateClientDatalist() {
-        var datalist = document.getElementById('clientsListDatalist');
-        if (!datalist) return;
-        datalist.innerHTML = '';
-        for (var i = 0; i < clients.length; i++) {
-            var option = document.createElement('option');
-            option.value = clients[i].name;
-            datalist.appendChild(option);
+        // Nomes das chaves usadas no localStorage (onde os dados são salvos no navegador)
+        var STORAGE_APPOINTMENTS = "barber57_appointments";
+        var STORAGE_HISTORY = "barber57_history";
+        var STORAGE_CLIENTS = "barber57_clients";
+
+        // ============================================
+        // BLOCO 2: FUNÇÕES DE NOTIFICAÇÃO E ALERTA
+        // ============================================
+        
+        /**
+         * Exibe um toast (mensagem temporária) no canto inferior da tela
+         * @param {string} msg - Mensagem a ser exibida
+         */
+        function showToast(msg) {
+            var toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(function() { 
+                if (toast.parentNode) toast.parentNode.removeChild(toast); 
+            }, 2500);
         }
-    }
-    
-    function setupClientNameSearch() {
-        var nameInput = document.getElementById('clientName');
-        var phoneInput = document.getElementById('clientPhone');
         
-        if (!nameInput || !phoneInput) return;
+        /**
+         * Exibe um modal (janela popup) com apenas um botão "OK"
+         * @param {string} title - Título do modal
+         * @param {string} message - Mensagem do modal
+         * @param {function} onClose - Função executada ao fechar
+         */
+        function showAlertModal(title, message, onClose) {
+            var modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-box">
+                    <h3>${title}</h3>
+                    <p>${message}</p>
+                    <button class="modal-btn" id="modalOkBtn">OK</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            document.getElementById('modalOkBtn').onclick = function() {
+                if (modal.parentNode) modal.parentNode.removeChild(modal);
+                if (onClose) onClose();
+            };
+        }
         
-        nameInput.addEventListener('input', function() {
-            var searchName = this.value.trim();
-            if (searchName) {
+        /**
+         * Exibe um modal com dois botões: "Sim" e "Não" (para confirmação)
+         * @param {string} title - Título do modal
+         * @param {string} message - Mensagem do modal
+         * @param {function} onConfirm - Função executada se clicar em Sim
+         * @param {function} onCancel - Função executada se clicar em Não
+         */
+        function showConfirmModal(title, message, onConfirm, onCancel) {
+            var modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-box">
+                    <h3>${title}</h3>
+                    <p>${message}</p>
+                    <div class="modal-buttons">
+                        <button class="modal-btn" id="modalConfirmBtn">Sim</button>
+                        <button class="modal-btn-secondary" id="modalCancelBtn">Não</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            document.getElementById('modalConfirmBtn').onclick = function() {
+                if (modal.parentNode) modal.parentNode.removeChild(modal);
+                if (onConfirm) onConfirm();
+            };
+            document.getElementById('modalCancelBtn').onclick = function() {
+                if (modal.parentNode) modal.parentNode.removeChild(modal);
+                if (onCancel) onCancel();
+            };
+        }
+
+        // ============================================
+        // BLOCO 3: FUNÇÕES DE WHATSAPP (ENVIO)
+        // ============================================
+        
+        /**
+         * Formata o número de telefone para o padrão internacional (55 + DDD + Número)
+         * Exemplo: "11999999999" vira "5511999999999"
+         * @param {string} phone - Número do telefone
+         * @returns {string} Número formatado
+         */
+        function formatPhone(phone) {
+            var cleaned = phone.replace(/\D/g, '');  // Remove tudo que não é número
+            if (!cleaned.startsWith('55')) cleaned = '55' + cleaned;  // Adiciona 55 se não tiver
+            return cleaned;
+        }
+        
+        /**
+         * Envia uma mensagem via WhatsApp usando o link direto https://wa.me/
+         * Isso abre o WhatsApp do celular ou WhatsApp Web com a mensagem pré-preenchida
+         * @param {string} phone - Número do telefone do destinatário
+         * @param {string} message - Mensagem a ser enviada
+         * @returns {boolean} true se conseguiu abrir o link
+         */
+        function sendWhatsApp(phone, message) {
+            var formattedPhone = formatPhone(phone);
+            var url = 'https://wa.me/' + formattedPhone + '?text=' + encodeURIComponent(message);
+            window.open(url, '_blank');  // Abre em nova aba/janela
+            return true;
+        }
+
+        // ============================================
+        // BLOCO 4: FUNÇÕES DE PERSISTÊNCIA (SALVAR/CARREGAR DADOS)
+        // ============================================
+        // O localStorage salva os dados no próprio navegador do celular/computador
+        // Isso permite que os dados continuem mesmo depois de fechar o app
+        
+        /**
+         * Salva todos os dados no localStorage (armazenamento local do navegador)
+         */
+        function saveData() {
+            localStorage.setItem(STORAGE_APPOINTMENTS, JSON.stringify(appointments));
+            localStorage.setItem(STORAGE_HISTORY, JSON.stringify(history));
+            localStorage.setItem(STORAGE_CLIENTS, JSON.stringify(clients));
+            updateUI();  // Atualiza a interface após salvar
+        }
+        
+        /**
+         * Carrega todos os dados do localStorage
+         */
+        function loadData() {
+            var storedAppointments = localStorage.getItem(STORAGE_APPOINTMENTS);
+            var storedHistory = localStorage.getItem(STORAGE_HISTORY);
+            var storedClients = localStorage.getItem(STORAGE_CLIENTS);
+            
+            appointments = storedAppointments ? JSON.parse(storedAppointments) : [];
+            history = storedHistory ? JSON.parse(storedHistory) : [];
+            clients = storedClients ? JSON.parse(storedClients) : [];
+            
+            updateUI();
+            updateClientDatalist();
+        }
+
+        // ============================================
+        // BLOCO 5: FUNÇÕES DE VERIFICAÇÃO DE DISPONIBILIDADE
+        // ============================================
+        
+        /**
+         * Retorna lista de horários disponíveis para uma determinada data
+         * @param {string} date - Data no formato YYYY-MM-DD
+         * @returns {Array} Lista de horários disponíveis
+         */
+        function getAvailableTimes(date) {
+            // Pega todos os horários já ocupados nesta data
+            var booked = [];
+            for (var i = 0; i < appointments.length; i++) {
+                if (appointments[i].date === date) {
+                    booked.push(appointments[i].time);
+                }
+            }
+            
+            // Filtra os horários disponíveis (os que não estão ocupados)
+            var available = [];
+            for (var i = 0; i < ALL_TIMES.length; i++) {
+                var found = false;
+                for (var j = 0; j < booked.length; j++) {
+                    if (ALL_TIMES[i] === booked[j]) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) available.push(ALL_TIMES[i]);
+            }
+            return available;
+        }
+        
+        /**
+         * Verifica se um horário específico está disponível
+         * @param {string} date - Data
+         * @param {string} time - Horário
+         * @param {number} excludeId - ID para excluir (útil em edições)
+         * @returns {boolean} true se disponível, false se ocupado
+         */
+        function isTimeAvailable(date, time, excludeId) {
+            excludeId = excludeId || null;
+            for (var i = 0; i < appointments.length; i++) {
+                if (appointments[i].date === date && appointments[i].time === time && appointments[i].id !== excludeId) {
+                    return false;  // Encontrou conflito
+                }
+            }
+            return true;  // Horário livre
+        }
+
+        // ============================================
+        // BLOCO 6: FUNÇÕES DE RENDERIZAÇÃO (MOSTRAR DADOS NA TELA)
+        // ============================================
+        
+        /**
+         * Atualiza todas as estatísticas (contagem de hoje e semana)
+         */
+        function updateStats() {
+            var today = new Date().toISOString().split('T')[0];
+            var todayCount = 0;
+            var weekCount = 0;
+            
+            var todayDate = new Date();
+            var weekStart = new Date(todayDate);
+            weekStart.setDate(todayDate.getDate() - todayDate.getDay());
+            var weekEnd = new Date(todayDate);
+            weekEnd.setDate(todayDate.getDate() + (6 - todayDate.getDay()));
+            
+            for (var i = 0; i < appointments.length; i++) {
+                if (appointments[i].date === today) todayCount++;
+                if (appointments[i].date >= weekStart.toISOString().split('T')[0] && 
+                    appointments[i].date <= weekEnd.toISOString().split('T')[0]) weekCount++;
+            }
+            
+            document.getElementById('todayCount').innerText = todayCount;
+            document.getElementById('weekCount').innerText = weekCount;
+        }
+        
+        /**
+         * Renderiza a lista de agendamentos futuros na tela
+         */
+        function renderAppointments() {
+            var container = document.getElementById('confirmedList');
+            if (!container) return;
+            var search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+            var filtered = appointments.filter(a => a.name.toLowerCase().includes(search));
+            filtered.sort((a,b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state">📭 Nenhum agendamento futuro</div>';
+                return;
+            }
+            
+            var html = '';
+            for (var i = 0; i < filtered.length; i++) {
+                var apt = filtered[i];
+                html += '<div class="item-card">' +
+                    '<div class="item-info">' +
+                    '<h4>✂️ ' + escapeHtml(apt.name) + '</h4>' +
+                    '<p>📅 ' + apt.date + ' ⏰ ' + apt.time + '</p>' +
+                    '<p style="font-size:0.65rem;">📱 ' + apt.phone + '</p>' +
+                    '</div>' +
+                    '<div class="item-actions">' +
+                    '<button class="btn-action btn-complete" onclick="completeAppointment(' + apt.id + ')">✅ Concluir</button>' +
+                    '<button class="btn-action" onclick="sendReminder(' + apt.id + ')">📱 Lembrar</button>' +
+                    '<button class="btn-action btn-cancel" onclick="cancelAppointment(' + apt.id + ')">❌ Cancelar</button>' +
+                    '</div>' +
+                    '</div>';
+            }
+            container.innerHTML = html;
+        }
+        
+        /**
+         * Renderiza o histórico de atendimentos concluídos
+         */
+        function renderHistory() {
+            var container = document.getElementById('historyList');
+            if (!container) return;
+            var search = document.getElementById('searchHistoryInput')?.value.toLowerCase() || '';
+            var filtered = history.filter(h => h.name.toLowerCase().includes(search));
+            filtered.reverse();  // Mostra os mais recentes primeiro
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state">📜 Nenhum atendimento no histórico</div>';
+                return;
+            }
+            
+            var html = '';
+            for (var i = 0; i < filtered.length; i++) {
+                var item = filtered[i];
+                var completedDate = new Date(item.completedAt).toLocaleDateString('pt-BR');
+                html += '<div class="item-card">' +
+                    '<div class="item-info">' +
+                    '<h4>✂️ ' + escapeHtml(item.name) + '</h4>' +
+                    '<p>📅 ' + item.date + ' ⏰ ' + item.time + '</p>' +
+                    '<p style="font-size:0.65rem;">📱 ' + item.phone + '</p>' +
+                    '<p style="font-size:0.6rem; color:#2ecc71;">✅ Concluído em: ' + completedDate + '</p>' +
+                    '</div>' +
+                    '</div>';
+            }
+            container.innerHTML = html;
+        }
+        
+        /**
+         * Renderiza a lista de clientes cadastrados
+         */
+        function renderClients() {
+            var container = document.getElementById('clientsList');
+            if (!container) return;
+            var search = document.getElementById('searchClientInput')?.value.toLowerCase() || '';
+            var filtered = clients.filter(c => c.name.toLowerCase().includes(search));
+            filtered.sort((a,b) => a.name.localeCompare(b.name));
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state">👥 Nenhum cliente cadastrado</div>';
+                return;
+            }
+            
+            var html = '';
+            for (var i = 0; i < filtered.length; i++) {
+                var client = filtered[i];
+                var freeCutText = (client.cutsCount || 0) >= 5 ? '<span class="free-cut-badge">🎁 5+ cortes</span>' : '';
+                html += '<div class="item-card">' +
+                    '<div class="item-info">' +
+                    '<h4>👤 ' + escapeHtml(client.name) + ' ' + freeCutText + '</h4>' +
+                    '<p>📱 ' + client.phone + '</p>' +
+                    '<p>✂️ Cortes: ' + (client.cutsCount || 0) + '</p>' +
+                    '</div>' +
+                    '<div class="item-actions">' +
+                    '<button class="btn-action" onclick="sendMessageToClient(\'' + client.phone + '\', \'' + escapeHtml(client.name) + '\')">💬 Mensagem</button>' +
+                    '<button class="btn-action" onclick="editClientById(' + client.id + ')">✏️ Editar</button>' +
+                    ((client.cutsCount || 0) >= 5 ? '<button class="btn-action btn-complete" onclick="giveFreeCutById(' + client.id + ')">🎁 Corte Grátis</button>' : '') +
+                    '</div>' +
+                    '</div>';
+            }
+            container.innerHTML = html;
+        }
+        
+        /**
+         * Atualiza a interface completa (todas as listas e estatísticas)
+         */
+        function updateUI() {
+            renderAppointments();
+            renderHistory();
+            renderClients();
+            updateStats();
+            
+            document.getElementById('totalHistory').innerText = history.length;
+            document.getElementById('totalClients').innerText = clients.length;
+        }
+        
+        /**
+         * Atualiza a lista de sugestões (datalist) para o campo de busca de clientes
+         */
+        function updateClientDatalist() {
+            var datalist = document.getElementById('clientsListDatalist');
+            if (!datalist) return;
+            datalist.innerHTML = '';
+            for (var i = 0; i < clients.length; i++) {
+                var option = document.createElement('option');
+                option.value = clients[i].name;
+                datalist.appendChild(option);
+            }
+        }
+        
+        /**
+         * Configura a busca automática: quando digita o nome, preenche o telefone
+         */
+        function setupClientNameSearch() {
+            var nameInput = document.getElementById('clientName');
+            var phoneInput = document.getElementById('clientPhone');
+            if (!nameInput || !phoneInput) return;
+            
+            nameInput.addEventListener('input', function() {
+                var searchName = this.value.trim();
                 for (var i = 0; i < clients.length; i++) {
                     if (clients[i].name.toLowerCase() === searchName.toLowerCase()) {
                         phoneInput.value = clients[i].phone;
                         break;
                     }
                 }
-            }
-        });
-        
-        nameInput.addEventListener('change', function() {
-            var searchName = this.value.trim();
-            if (searchName) {
-                for (var i = 0; i < clients.length; i++) {
-                    if (clients[i].name.toLowerCase() === searchName.toLowerCase()) {
-                        phoneInput.value = clients[i].phone;
-                        break;
-                    }
-                }
-            }
-        });
-    }
-    
-    function getAvailableTimes(date) {
-        var booked = [];
-        for (var i = 0; i < confirmedAppointments.length; i++) {
-            if (confirmedAppointments[i].date === date) {
-                booked.push(confirmedAppointments[i].time);
-            }
+            });
         }
         
-        var available = [];
-        for (var i = 0; i < ALL_TIMES.length; i++) {
-            var found = false;
-            for (var j = 0; j < booked.length; j++) {
-                if (ALL_TIMES[i] === booked[j]) {
-                    found = true;
+        /**
+         * Atualiza as opções de horário no select baseado na data selecionada
+         */
+        function updateTimeOptions() {
+            var date = document.getElementById('bookingDate').value;
+            var timeSelect = document.getElementById('bookingTime');
+            if (!date || !timeSelect) return;
+            var available = getAvailableTimes(date);
+            timeSelect.innerHTML = '<option value="">Selecionar horário</option>';
+            for (var i = 0; i < available.length; i++) {
+                timeSelect.innerHTML += '<option value="' + available[i] + '">' + available[i] + '</option>';
+            }
+        }
+
+        // ============================================
+        // BLOCO 7: FUNÇÕES DE AÇÃO (CRUD)
+        // ============================================
+        
+        /**
+         * Conclui um atendimento: move da lista de agendamentos para o histórico
+         * e incrementa o contador de cortes do cliente
+         * @param {number} id - ID do agendamento a ser concluído
+         */
+        window.completeAppointment = function(id) {
+            var apt = null;
+            for (var i = 0; i < appointments.length; i++) {
+                if (appointments[i].id === id) {
+                    apt = appointments[i];
                     break;
                 }
             }
-            if (!found) available.push(ALL_TIMES[i]);
-        }
-        return available;
-    }
-    
-    function isTimeAvailable(date, time, excludeId) {
-        excludeId = excludeId || null;
-        for (var i = 0; i < confirmedAppointments.length; i++) {
-            if (confirmedAppointments[i].date === date && confirmedAppointments[i].time === time && confirmedAppointments[i].id !== excludeId) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    function updateTimeOptions() {
-        var date = document.getElementById('bookingDate').value;
-        var timeSelect = document.getElementById('bookingTime');
-        if (!date || !timeSelect) return;
-        var available = getAvailableTimes(date);
-        timeSelect.innerHTML = '<option value="">Selecionar horário</option>';
-        for (var i = 0; i < available.length; i++) {
-            timeSelect.innerHTML += '<option value="' + available[i] + '">' + available[i] + '</option>';
-        }
-    }
-    
-    function renderPending() {
-        var container = document.getElementById('pendingList');
-        if (!container) return;
-        
-        if (pendingRequests.length === 0) {
-            container.innerHTML = '<div class="empty-state">✨ Nenhuma solicitação pendente</div>';
-            return;
-        }
-        
-        var html = '';
-        for (var i = 0; i < pendingRequests.length; i++) {
-            var req = pendingRequests[i];
-            html += '<div class="item-card">' +
-                '<div class="item-info">' +
-                '<h4>✂️ ' + escapeHtml(req.name) + '</h4>' +
-                '<p>📅 ' + req.date + ' ⏰ ' + req.time + '</p>' +
-                '<p style="font-size:0.65rem;">📱 ' + req.phone + '</p>' +
-                '</div>' +
-                '<div style="display:flex; gap:0.5rem;">' +
-                '<button class="confirm-btn" onclick="confirmAppointment(' + req.id + ')">✅ Confirmar</button>' +
-                '<button class="delete-btn" onclick="rejectPendingRequest(' + req.id + ')">❌ Recusar</button>' +
-                '</div>' +
-                '</div>';
-        }
-        container.innerHTML = html;
-    }
-    
-    function renderConfirmed() {
-        var container = document.getElementById('confirmedList');
-        if (!container) return;
-        
-        var searchInput = document.getElementById('searchInput');
-        var search = searchInput ? searchInput.value.toLowerCase() : '';
-        
-        var filtered = [];
-        for (var i = 0; i < confirmedAppointments.length; i++) {
-            if (confirmedAppointments[i].name.toLowerCase().indexOf(search) !== -1) {
-                filtered.push(confirmedAppointments[i]);
-            }
-        }
-        
-        filtered.sort(function(a, b) {
-            return a.date.localeCompare(b.date) || a.time.localeCompare(b.time);
-        });
-        
-        if (filtered.length === 0) {
-            container.innerHTML = '<div class="empty-state">📭 Nenhum agendamento confirmado</div>';
-            return;
-        }
-        
-        var html = '';
-        for (var i = 0; i < filtered.length; i++) {
-            var apt = filtered[i];
-            html += '<div class="item-card">' +
-                '<div class="item-info">' +
-                '<h4>✂️ ' + escapeHtml(apt.name) + '</h4>' +
-                '<p>📅 ' + apt.date + ' ⏰ ' + apt.time + '</p>' +
-                '<p style="font-size:0.65rem;">📱 ' + apt.phone + '</p>' +
-                '</div>' +
-                '<button class="delete-btn" onclick="cancelConfirmed(' + apt.id + ')">Cancelar</button>' +
-                '</div>';
-        }
-        container.innerHTML = html;
-    }
-    
-    function renderClients() {
-        var container = document.getElementById('clientsList');
-        if (!container) return;
-        
-        var searchInput = document.getElementById('searchClientInput');
-        var search = searchInput ? searchInput.value.toLowerCase() : '';
-        
-        var filtered = [];
-        for (var i = 0; i < clients.length; i++) {
-            if (clients[i].name.toLowerCase().indexOf(search) !== -1) {
-                filtered.push(clients[i]);
-            }
-        }
-        
-        filtered.sort(function(a, b) {
-            return a.name.localeCompare(b.name);
-        });
-        
-        if (filtered.length === 0) {
-            container.innerHTML = '<div class="empty-state">👥 Nenhum cliente cadastrado</div>';
-            return;
-        }
-        
-        var html = '';
-        for (var i = 0; i < filtered.length; i++) {
-            var client = filtered[i];
-            var freeCutText = (client.cutsCount || 0) >= 5 ? '<span class="free-cut-badge">🎁 5+ cortes</span>' : '';
-            html += '<div class="item-card">' +
-                '<div class="item-info">' +
-                '<h4>👤 ' + escapeHtml(client.name) + ' ' + freeCutText + '</h4>' +
-                '<p>📱 ' + client.phone + '</p>' +
-                '<p>✂️ Cortes: ' + (client.cutsCount || 0) + '</p>' +
-                '</div>' +
-                '<div style="display:flex; gap:0.5rem; flex-wrap:wrap;">' +
-                '<button class="whatsapp-btn" onclick="sendMessageToClient(\'' + client.phone + '\', \'' + escapeHtml(client.name) + '\')">💬 Mensagem</button>' +
-                '<button class="edit-client-btn" onclick="editClientById(' + client.id + ')">✏️ Editar</button>' +
-                ((client.cutsCount || 0) >= 5 ? '<button class="confirm-btn" onclick="giveFreeCutById(' + client.id + ')">🎁 Corte Grátis</button>' : '') +
-                '</div>' +
-                '</div>';
-        }
-        container.innerHTML = html;
-    }
-    
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-    
-    // Funções de agendamento
-    function sendClientMessage(clientName, clientPhone, desiredDate, desiredTime) {
-        var message = '✂️ *57 BARBER CLUB* ✂️\n\nOlá ' + clientName + '!\n\nRecebemos sua solicitação de agendamento para o dia *' + desiredDate + '* às *' + desiredTime + '*.\n\n✅ *AGUARDE CONFIRMAÇÃO*\nAssim que o barbeiro confirmar, você receberá uma mensagem.\n\n---\n57 Barber Club - Estilo e Tradição';
-        sendWhatsApp(clientPhone, message);
-    }
-    
-    function notifyBarber(clientName, clientPhone, desiredDate, desiredTime, requestId) {
-        var barberPhone = localStorage.getItem('barber_phone');
-        if (!barberPhone) return;
-        var message = '✂️ *NOVA SOLICITAÇÃO* ✂️\n\nCliente: ' + clientName + '\nWhatsApp: ' + clientPhone + '\nHorário: ' + desiredDate + ' às ' + desiredTime + '\n\nAcesse o sistema para CONFIRMAR ou RECUSAR.';
-        sendWhatsApp(barberPhone, message);
-    }
-    
-    function createPendingRequest(name, phone, date, time) {
-        var request = {
-            id: Date.now(),
-            name: name,
-            phone: phone,
-            date: date,
-            time: time,
-            status: 'pending',
-            createdAt: new Date().toISOString()
-        };
-        pendingRequests.push(request);
-        saveData();
-        return request;
-    }
-    
-    window.confirmAppointment = function(requestId) {
-        var index = -1;
-        for (var i = 0; i < pendingRequests.length; i++) {
-            if (pendingRequests[i].id === requestId) {
-                index = i;
-                break;
-            }
-        }
-        
-        if (index === -1) {
-            showAlertModal("Erro", "Solicitação não encontrada!", null);
-            return;
-        }
-        
-        var req = pendingRequests[index];
-        
-        if (!isTimeAvailable(req.date, req.time)) {
-            showAlertModal("Horário Indisponível", 'O horário ' + req.time + ' do dia ' + req.date + ' já foi ocupado.', function() {
-                pendingRequests.splice(index, 1);
-                saveData();
-            });
-            return;
-        }
-        
-        var client = null;
-        for (var i = 0; i < clients.length; i++) {
-            if (clients[i].phone === req.phone) {
-                client = clients[i];
-                break;
-            }
-        }
-        
-        if (client) {
-            client.cutsCount = (client.cutsCount || 0) + 1;
-            saveData();
-        }
-        
-        var newApt = {
-            id: Date.now(),
-            name: req.name,
-            phone: req.phone,
-            date: req.date,
-            time: req.time,
-            confirmedAt: new Date().toISOString()
-        };
-        confirmedAppointments.push(newApt);
-        
-        var confirmMsg = '✅ *AGENDAMENTO CONFIRMADO!* ✅\n\n' + req.name + ', seu corte na 57 Barber Club está marcado para:\n\n📅 ' + req.date + '\n⏰ ' + req.time + '\n\n✂️ Chegue 5 minutos antes!\n\n---\n57 Barber Club - O melhor corte';
-        sendWhatsApp(req.phone, confirmMsg);
-        
-        pendingRequests.splice(index, 1);
-        saveData();
-        showAlertModal("✅ Confirmado!", 'Horário de ' + req.name + ' agendado com sucesso!', null);
-        updateUI();
-    };
-    
-    window.rejectPendingRequest = function(requestId) {
-        var index = -1;
-        for (var i = 0; i < pendingRequests.length; i++) {
-            if (pendingRequests[i].id === requestId) {
-                index = i;
-                break;
-            }
-        }
-        
-        if (index === -1) return;
-        var req = pendingRequests[index];
-        var rejectMsg = '❌ *SOLICITAÇÃO RECUSADA*\n\nOlá ' + req.name + ', sua solicitação para ' + req.date + ' às ' + req.time + ' foi recusada pela barbearia.\n\nPor favor, tente outro horário.';
-        sendWhatsApp(req.phone, rejectMsg);
-        pendingRequests.splice(index, 1);
-        saveData();
-        showToast('❌ Solicitação de ' + req.name + ' recusada');
-        updateUI();
-    };
-    
-    window.cancelConfirmed = function(id) {
-        var apt = null;
-        for (var i = 0; i < confirmedAppointments.length; i++) {
-            if (confirmedAppointments[i].id === id) {
-                apt = confirmedAppointments[i];
-                break;
-            }
-        }
-        
-        if (!apt) return;
-        showConfirmModal("⚠️ Cancelar", 'Cancelar agendamento de ' + apt.name + '?', function() {
-            var cancelMsg = '⚠️ *AGENDAMENTO CANCELADO*\n\nOlá ' + apt.name + ', seu horário ' + apt.date + ' às ' + apt.time + ' foi CANCELADO pela barbearia.\n\nEntre em contato para remarcar.';
-            sendWhatsApp(apt.phone, cancelMsg);
+            if (!apt) return;
             
-            var newConfirmed = [];
-            for (var i = 0; i < confirmedAppointments.length; i++) {
-                if (confirmedAppointments[i].id !== id) {
-                    newConfirmed.push(confirmedAppointments[i]);
-                }
-            }
-            confirmedAppointments = newConfirmed;
-            saveData();
-            showToast('❌ Agendamento de ' + apt.name + ' cancelado');
-            updateUI();
-        }, null);
-    };
-    
-    function showNewClientModal(editClient, returnToManage) {
-        editClient = editClient || null;
-        returnToManage = (returnToManage !== undefined) ? returnToManage : true;
-        
-        var modal = document.createElement('div');
-        modal.className = 'modal-overlay';
-        var isEdit = !!editClient;
-        
-        modal.innerHTML = '<div class="modal-box">' +
-            '<h3>' + (isEdit ? '✏️ Editar Cliente' : '➕ Novo Cliente') + '</h3>' +
-            '<div class="form-group"><label>👤 Nome</label><input type="text" id="clientNameModal" value="' + (isEdit ? escapeHtml(editClient.name) : '') + '" placeholder="Nome completo"></div>' +
-            '<div class="form-group"><label>📱 WhatsApp</label><input type="tel" id="clientPhoneModal" value="' + (isEdit ? editClient.phone : '') + '" placeholder="11999999999"></div>' +
-            '<div class="form-group"><label>✂️ Cortes realizados</label><input type="number" id="clientCutsModal" value="' + (isEdit ? (editClient.cutsCount || 0) : 0) + '" min="0"></div>' +
-            '<div class="modal-buttons">' +
-            '<button class="modal-btn" id="saveClientBtn">' + (isEdit ? 'Salvar Alterações' : 'Cadastrar') + '</button>' +
-            '<button class="modal-btn-secondary" id="cancelClientBtn">Cancelar</button>' +
-            '</div></div>';
-        
-        document.body.appendChild(modal);
-        
-        document.getElementById('saveClientBtn').onclick = function() {
-            var name = document.getElementById('clientNameModal').value.trim();
-            var phone = document.getElementById('clientPhoneModal').value.replace(/\D/g, '');
-            var cuts = parseInt(document.getElementById('clientCutsModal').value) || 0;
-            
-            if (name && phone.length >= 10) {
-                if (isEdit) {
-                    editClient.name = name;
-                    editClient.phone = phone;
-                    editClient.cutsCount = cuts;
-                    showToast("✅ Cliente atualizado com sucesso!");
-                } else {
-                    var existing = false;
-                    for (var i = 0; i < clients.length; i++) {
-                        if (clients[i].phone === phone) {
-                            existing = true;
-                            break;
-                        }
+            showConfirmModal("✅ Concluir Atendimento", 'Confirmar que o atendimento de ' + apt.name + ' foi realizado?', function() {
+                // Adiciona ao histórico
+                var historyItem = {
+                    id: apt.id,
+                    name: apt.name,
+                    phone: apt.phone,
+                    date: apt.date,
+                    time: apt.time,
+                    completedAt: new Date().toISOString()
+                };
+                history.push(historyItem);
+                
+                // Incrementa contador de cortes do cliente
+                for (var i = 0; i < clients.length; i++) {
+                    if (clients[i].phone === apt.phone) {
+                        clients[i].cutsCount = (clients[i].cutsCount || 0) + 1;
+                        break;
                     }
-                    if (existing) {
-                        showToast("⚠️ Cliente já cadastrado!");
-                        return;
+                }
+                
+                // Remove dos agendamentos ativos
+                var newAppointments = [];
+                for (var i = 0; i < appointments.length; i++) {
+                    if (appointments[i].id !== id) {
+                        newAppointments.push(appointments[i]);
                     }
-                    clients.push({
-                        id: Date.now(),
-                        name: name,
-                        phone: phone,
-                        cutsCount: cuts,
-                        createdAt: new Date().toISOString()
-                    });
-                    showToast("✅ Cliente cadastrado com sucesso!");
                 }
+                appointments = newAppointments;
                 saveData();
-                if (modal.parentNode) modal.parentNode.removeChild(modal);
-                updateClientDatalist();
-                if (returnToManage) {
-                    switchTab('manage');
-                } else {
-                    renderClients();
+                showToast('✅ Atendimento de ' + apt.name + ' concluído!');
+            }, null);
+        };
+        
+        /**
+         * Cancela um agendamento e notifica o cliente via WhatsApp
+         * @param {number} id - ID do agendamento a ser cancelado
+         */
+        window.cancelAppointment = function(id) {
+            var apt = null;
+            for (var i = 0; i < appointments.length; i++) {
+                if (appointments[i].id === id) {
+                    apt = appointments[i];
+                    break;
                 }
-            } else {
-                showToast("❌ Preencha nome e WhatsApp válido!");
             }
+            if (!apt) return;
+            
+            showConfirmModal("⚠️ Cancelar", 'Cancelar agendamento de ' + apt.name + '? O cliente será notificado.', function() {
+                var cancelMsg = '⚠️ *AGENDAMENTO CANCELADO*\n\nOlá ' + apt.name + ', seu horário ' + apt.date + ' às ' + apt.time + ' foi CANCELADO pela barbearia.\n\nEntre em contato para remarcar.';
+                sendWhatsApp(apt.phone, cancelMsg);
+                
+                var newAppointments = [];
+                for (var i = 0; i < appointments.length; i++) {
+                    if (appointments[i].id !== id) {
+                        newAppointments.push(appointments[i]);
+                    }
+                }
+                appointments = newAppointments;
+                saveData();
+                showToast('❌ Agendamento de ' + apt.name + ' cancelado');
+            }, null);
         };
         
-        document.getElementById('cancelClientBtn').onclick = function() {
-            if (modal.parentNode) modal.parentNode.removeChild(modal);
-            if (returnToManage) switchTab('manage');
+        /**
+         * Envia um lembrete via WhatsApp para o cliente
+         * @param {number} id - ID do agendamento
+         */
+        window.sendReminder = function(id) {
+            var apt = null;
+            for (var i = 0; i < appointments.length; i++) {
+                if (appointments[i].id === id) {
+                    apt = appointments[i];
+                    break;
+                }
+            }
+            if (!apt) return;
+            
+            var reminderMsg = '✂️ *LEMBRETE - 57 BARBER CLUB* ✂️\n\nOlá ' + apt.name + '! Seu horário está agendado para hoje às ' + apt.time + '.\n\n✂️ Te esperamos na barbearia!';
+            sendWhatsApp(apt.phone, reminderMsg);
+            showToast('📨 Lembrete enviado para ' + apt.name);
         };
-    }
-    
-    window.editClientById = function(id) {
-        var client = null;
-        for (var i = 0; i < clients.length; i++) {
-            if (clients[i].id === id) {
-                client = clients[i];
-                break;
-            }
-        }
-        if (client) showNewClientModal(client, false);
-    };
-    
-    window.giveFreeCutById = function(id) {
-        var client = null;
-        for (var i = 0; i < clients.length; i++) {
-            if (clients[i].id === id) {
-                client = clients[i];
-                break;
-            }
-        }
-        if (!client) return;
-        showConfirmModal("✂️ Corte Grátis!", client.name + ' já fez ' + client.cutsCount + ' cortes. Deseja oferecer um corte grátis?', function() {
-            var msg = '🎉 *CORTE GRÁTIS!* 🎉\n\nOlá ' + client.name + '! Parabéns! Você ganhou um CORTE GRÁTIS na 57 Barber Club como parte do nosso programa de fidelidade.\n\nAgende seu horário conosco! 🎊';
-            sendWhatsApp(client.phone, msg);
-            showToast('✅ Mensagem de corte grátis enviada para ' + client.name);
-        }, null);
-    };
-    
-    window.sendMessageToClient = function(phone, name) {
-        var msg = '✂️ *57 BARBER CLUB* ✂️\n\nOlá ' + name + '! Este é o sistema da barbearia.\n\nPara agendar um horário, entre em contato conosco.\n\nAgradecemos a preferência!';
-        sendWhatsApp(phone, msg);
-        showToast('📨 Mensagem enviada para ' + name);
-    };
-    
-    window.switchTab = function(tab) {
-        var bookingTab = document.getElementById('bookingTab');
-        var manageTab = document.getElementById('manageTab');
-        var clientsTab = document.getElementById('clientsTab');
-        var btns = document.querySelectorAll('.tab-btn');
         
-        bookingTab.style.display = 'none';
-        manageTab.style.display = 'none';
-        clientsTab.style.display = 'none';
-        
-        if (tab === 'booking') {
-            bookingTab.style.display = 'block';
-            btns[0].classList.add('active');
-            btns[1].classList.remove('active');
-            btns[2].classList.remove('active');
-            updateTimeOptions();
-        } else if (tab === 'manage') {
-            manageTab.style.display = 'block';
-            btns[0].classList.remove('active');
-            btns[1].classList.add('active');
-            btns[2].classList.remove('active');
-            renderConfirmed();
-        } else {
-            clientsTab.style.display = 'block';
-            btns[0].classList.remove('active');
-            btns[1].classList.remove('active');
-            btns[2].classList.add('active');
-            renderClients();
-        }
-    };
-    
-    // Eventos do formulário
-    var form = document.getElementById('bookingForm');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            var name = document.getElementById('clientName').value.trim();
-            var phone = document.getElementById('clientPhone').value.replace(/\D/g, '');
-            var date = document.getElementById('bookingDate').value;
-            var time = document.getElementById('bookingTime').value;
-            
-            if (!name || !phone || !date || !time) {
-                showToast('❌ Preencha todos os campos!');
-                return;
-            }
-            
-            if (phone.length < 10) {
-                showToast('❌ WhatsApp inválido! Ex: 11999999999');
-                return;
-            }
-            
-            var today = new Date().toISOString().split('T')[0];
-            if (date < today) {
-                showToast('❌ Data inválida! Escolha hoje ou futuro.');
-                return;
-            }
-            
-            if (!isTimeAvailable(date, time)) {
-                showToast('❌ Horário ' + time + ' do dia ' + date + ' já está ocupado!');
-                return;
-            }
-            
-            var existingClient = false;
+        /**
+         * Cria um novo agendamento diretamente (já confirmado)
+         * @param {string} name - Nome do cliente
+         * @param {string} phone - Telefone do cliente
+         * @param {string} date - Data do agendamento
+         * @param {string} time - Horário do agendamento
+         */
+        function createDirectAppointment(name, phone, date, time) {
+            // Verifica se cliente já existe, se não, cadastra
+            var existingClient = null;
             for (var i = 0; i < clients.length; i++) {
                 if (clients[i].phone === phone) {
-                    existingClient = true;
+                    existingClient = clients[i];
                     break;
                 }
             }
@@ -1335,58 +1357,403 @@
                 updateClientDatalist();
             }
             
-            var request = createPendingRequest(name, phone, date, time);
-            sendClientMessage(name, phone, date, time);
-            notifyBarber(name, phone, date, time, request.id);
-            showToast('📨 Solicitação enviada! Barbeiro será notificado.');
+            // Cria o agendamento
+            var newApt = {
+                id: Date.now(),
+                name: name,
+                phone: phone,
+                date: date,
+                time: time,
+                createdAt: new Date().toISOString()
+            };
+            appointments.push(newApt);
+            saveData();
             
-            document.getElementById('clientName').value = '';
-            document.getElementById('clientPhone').value = '';
-            document.getElementById('bookingTime').value = '';
-            switchTab('manage');
-        });
-    }
-    
-    var dateInput = document.getElementById('bookingDate');
-    if (dateInput) {
-        var todayDate = new Date().toISOString().split('T')[0];
-        dateInput.min = todayDate;
-        dateInput.value = todayDate;
-        dateInput.addEventListener('change', updateTimeOptions);
-    }
-    
-    var searchInput = document.getElementById('searchInput');
-    if (searchInput) searchInput.addEventListener('input', function() { renderConfirmed(); });
-    
-    var searchClientInput = document.getElementById('searchClientInput');
-    if (searchClientInput) searchClientInput.addEventListener('input', function() { renderClients(); });
-    
-    var clearAllBtn = document.getElementById('clearAllBtn');
-    if (clearAllBtn) {
-        clearAllBtn.addEventListener('click', function() {
-            if (confirm('⚠️ ATENÇÃO: Isso apagará TODOS os agendamentos confirmados!')) {
-                confirmedAppointments = [];
-                saveData();
-                showToast('🗑️ Todos os agendamentos foram removidos');
-                renderConfirmed();
+            // Envia mensagem de confirmação para o cliente
+            var confirmMsg = '✅ *AGENDAMENTO CONFIRMADO!* ✅\n\nOlá ' + name + '! Seu corte na 57 Barber Club está marcado para:\n\n📅 ' + date + '\n⏰ ' + time + '\n\n✂️ Chegue 5 minutos antes!';
+            sendWhatsApp(phone, confirmMsg);
+            
+            return newApt;
+        }
+        
+        /**
+         * Envia uma mensagem personalizada para o cliente
+         */
+        window.sendMessageToClient = function(phone, name) {
+            var msg = '✂️ *57 BARBER CLUB* ✂️\n\nOlá ' + name + '! Seu próximo horário está reservado.\n\nAgradecemos a preferência!';
+            sendWhatsApp(phone, msg);
+            showToast('📨 Mensagem enviada para ' + name);
+        };
+        
+        /**
+         * Oferece um corte grátis para cliente fiel (5+ cortes)
+         */
+        function giveFreeCut(client) {
+            showConfirmModal("✂️ Corte Grátis!", client.name + ' já fez ' + client.cutsCount + ' cortes. Deseja oferecer um corte grátis?', function() {
+                var msg = '🎉 *CORTE GRÁTIS!* 🎉\n\nOlá ' + client.name + '! Parabéns! Você ganhou um CORTE GRÁTIS na 57 Barber Club!\n\nAgende seu horário conosco! 🎊';
+                sendWhatsApp(client.phone, msg);
+                showToast('✅ Mensagem de corte grátis enviada para ' + client.name);
+            }, null);
+        }
+        
+        window.giveFreeCutById = function(id) {
+            var client = clients.find(c => c.id === id);
+            if (client) giveFreeCut(client);
+        };
+
+        // ============================================
+        // BLOCO 8: MODAL DE CADASTRO DO BARBEIRO
+        // ============================================
+        // Exibe na primeira execução para o barbeiro se cadastrar
+        
+        function showBarberRegistrationModal() {
+            var modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-box">
+                    <h3>✂️ Bem-vindo ao 57 Barber Club!</h3>
+                    <p>Faça seu pré-cadastro para começar</p>
+                    <div class="form-group">
+                        <label>👤 Seu Nome</label>
+                        <input type="text" id="barberNameInput" placeholder="Seu Nome">
+                    </div>
+                    <div class="form-group">
+                        <label>📱 Seu WhatsApp (com DDD)</label>
+                        <input type="tel" id="barberPhoneInput" placeholder="Seu WhatsApp">
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="modal-btn" id="saveBarberBtn">Salvar</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            document.getElementById('saveBarberBtn').onclick = function() {
+                var name = document.getElementById('barberNameInput').value.trim();
+                var phone = document.getElementById('barberPhoneInput').value.replace(/\D/g, '');
+                
+                if (name && phone.length >= 10) {
+                    localStorage.setItem('barber_name', name);
+                    localStorage.setItem('barber_phone', phone);
+                    modal.remove();
+                    showToast('✅ Cadastro realizado com sucesso!');
+                    loadData();
+                    updateTimeOptions();
+                    setupClientNameSearch();
+                } else {
+                    showToast('❌ Preencha todos os campos corretamente!');
+                }
+            };
+        }
+
+        // ============================================
+        // BLOCO 9: BACKUP E RESTAURAÇÃO DE DADOS
+        // ============================================
+        
+        /**
+         * Exporta todos os dados para um arquivo JSON (backup)
+         */
+        function exportData() {
+            var data = {
+                clients: clients,
+                history: history,
+                appointments: appointments,
+                barber_name: localStorage.getItem('barber_name'),
+                barber_phone: localStorage.getItem('barber_phone'),
+                exportDate: new Date().toISOString()
+            };
+            var dataStr = JSON.stringify(data, null, 2);
+            var blob = new Blob([dataStr], {type: "application/json"});
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = `barber57_backup_${new Date().toISOString().slice(0,19)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("✅ Backup exportado com sucesso!");
+        }
+        
+        /**
+         * Importa dados de um arquivo JSON e restaura o sistema
+         */
+        function importData(file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    var data = JSON.parse(e.target.result);
+                    if (data.clients) clients = data.clients;
+                    if (data.history) history = data.history;
+                    if (data.appointments) appointments = data.appointments;
+                    if (data.barber_name) localStorage.setItem('barber_name', data.barber_name);
+                    if (data.barber_phone) localStorage.setItem('barber_phone', data.barber_phone);
+                    saveData();
+                    showToast("✅ Dados importados e restaurados com sucesso!");
+                    location.reload();
+                } catch(err) {
+                    showToast("❌ Erro ao importar arquivo. Formato inválido.");
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        /**
+         * Limpa todos os dados do sistema (reset completo)
+         */
+        function resetAllData() {
+            showConfirmModal("⚠️ ATENÇÃO DEFINITIVA!", "Isso vai APAGAR TUDO: barbeiro, clientes, agendamentos e histórico. Não tem volta!", function() {
+                localStorage.clear();
+                showToast("🗑️ Todos os dados foram apagados. A página vai recarregar.");
+                setTimeout(() => location.reload(), 2000);
+            }, null);
+        }
+
+        // ============================================
+        // BLOCO 10: NAVEGAÇÃO ENTRE ABAS
+        // ============================================
+        
+        window.switchTab = function(tab) {
+            var bookingTab = document.getElementById('bookingTab');
+            var manageTab = document.getElementById('manageTab');
+            var historyTab = document.getElementById('historyTab');
+            var clientsTab = document.getElementById('clientsTab');
+            var settingsTab = document.getElementById('settingsTab');
+            var btns = document.querySelectorAll('.tab-btn');
+            
+            // Esconde todas as abas
+            bookingTab.style.display = 'none';
+            manageTab.style.display = 'none';
+            historyTab.style.display = 'none';
+            clientsTab.style.display = 'none';
+            if(settingsTab) settingsTab.style.display = 'none';
+            
+            // Mostra a aba selecionada
+            if (tab === 'booking') {
+                bookingTab.style.display = 'block';
+                btns[0].classList.add('active');
+                btns[1].classList.remove('active');
+                btns[2].classList.remove('active');
+                btns[3].classList.remove('active');
+                btns[4].classList.remove('active');
+                updateTimeOptions();
+            } else if (tab === 'manage') {
+                manageTab.style.display = 'block';
+                btns[0].classList.remove('active');
+                btns[1].classList.add('active');
+                btns[2].classList.remove('active');
+                btns[3].classList.remove('active');
+                btns[4].classList.remove('active');
+                renderAppointments();
+            } else if (tab === 'history') {
+                historyTab.style.display = 'block';
+                btns[0].classList.remove('active');
+                btns[1].classList.remove('active');
+                btns[2].classList.add('active');
+                btns[3].classList.remove('active');
+                btns[4].classList.remove('active');
+                renderHistory();
+            } else if (tab === 'clients') {
+                clientsTab.style.display = 'block';
+                btns[0].classList.remove('active');
+                btns[1].classList.remove('active');
+                btns[2].classList.remove('active');
+                btns[3].classList.add('active');
+                btns[4].classList.remove('active');
+                renderClients();
+            } else if (tab === 'settings') {
+                settingsTab.style.display = 'block';
+                btns[0].classList.remove('active');
+                btns[1].classList.remove('active');
+                btns[2].classList.remove('active');
+                btns[3].classList.remove('active');
+                btns[4].classList.add('active');
             }
+        };
+
+        // ============================================
+        // BLOCO 11: EVENT LISTENERS (OUVINTES DE EVENTOS)
+        // ============================================
+        
+        // Formulário de agendamento
+        document.getElementById('bookingForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();  // Impede o recarregamento da página
+            
+            var name = document.getElementById('clientName').value.trim();
+            var phone = document.getElementById('clientPhone').value.replace(/\D/g, '');
+            var date = document.getElementById('bookingDate').value;
+            var time = document.getElementById('bookingTime').value;
+            
+            // Validações
+            if (!name || !phone || !date || !time) { showToast('❌ Preencha todos os campos!'); return; }
+            if (phone.length < 10) { showToast('❌ WhatsApp inválido!'); return; }
+            
+            var today = new Date().toISOString().split('T')[0];
+            if (date < today) { showToast('❌ Data inválida!'); return; }
+            if (!isTimeAvailable(date, time)) { showToast('❌ Horário já ocupado!'); return; }
+            
+            // Cria o agendamento
+            createDirectAppointment(name, phone, date, time);
+            
+            showAlertModal("✅ Agendado!", `Horário de ${name} agendado com sucesso!\n\nUma mensagem foi enviada para o cliente.`, function() {
+                // Limpa o formulário
+                document.getElementById('clientName').value = '';
+                document.getElementById('clientPhone').value = '';
+                document.getElementById('bookingTime').value = '';
+                switchTab('manage');
+            });
         });
-    }
-    
-    var newClientBtn = document.getElementById('newClientBtn');
-    if (newClientBtn) newClientBtn.addEventListener('click', function() { showNewClientModal(null, false); });
-    
-    var quickNewClientBtn = document.getElementById('quickNewClientBtn');
-    if (quickNewClientBtn) quickNewClientBtn.addEventListener('click', function() { showNewClientModal(null, true); });
-    
-    // INICIALIZAÇÃO - Mostrar splash por 2 segundos
-    setTimeout(function() {
-        hideSplashAndShowContent();
-    }, 2000);
-    
-    setTimeout(function() {
-        initializeSystem();
-    }, 2200);
-</script>
+        
+        // Configuração da data mínima (não permitir datas passadas)
+        var dateInput = document.getElementById('bookingDate');
+        if (dateInput) {
+            var todayDate = new Date().toISOString().split('T')[0];
+            dateInput.min = todayDate;
+            dateInput.value = todayDate;
+            dateInput.addEventListener('change', updateTimeOptions);
+        }
+        
+        // Campo de busca na lista de agendamentos
+        document.getElementById('searchInput')?.addEventListener('input', () => renderAppointments());
+        
+        // Campo de busca no histórico
+        document.getElementById('searchHistoryInput')?.addEventListener('input', () => renderHistory());
+        
+        // Campo de busca na lista de clientes
+        document.getElementById('searchClientInput')?.addEventListener('input', () => renderClients());
+        
+        // Botão para limpar histórico
+        document.getElementById('clearHistoryBtn')?.addEventListener('click', () => {
+            if(confirm('⚠️ Apagar TODO o histórico?')) { history = []; saveData(); showToast('Histórico limpo'); renderHistory(); }
+        });
+        
+        // Botões para adicionar novo cliente
+        document.getElementById('newClientBtn')?.addEventListener('click', () => {
+            showNewClientModal(null, false);
+        });
+        document.getElementById('quickNewClientBtn')?.addEventListener('click', () => {
+            showNewClientModal(null, true);
+        });
+        
+        // Botões de backup
+        document.getElementById('exportDataBtn')?.addEventListener('click', exportData);
+        document.getElementById('importDataBtn')?.addEventListener('click', () => document.getElementById('importFileInput').click());
+        document.getElementById('importFileInput')?.addEventListener('change', (e) => { 
+            if(e.target.files.length) importData(e.target.files[0]); 
+            e.target.value = ''; 
+        });
+        document.getElementById('resetAllDataBtn')?.addEventListener('click', resetAllData);
+        
+        // Função para limpar caracteres especiais (evitar bugs)
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        // Função para abrir modal de novo cliente
+        function showNewClientModal(editClient, returnToManage) {
+            var modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            var isEdit = !!editClient;
+            
+            modal.innerHTML = '<div class="modal-box">' +
+                '<h3>' + (isEdit ? '✏️ Editar Cliente' : '➕ Novo Cliente') + '</h3>' +
+                '<div class="form-group"><label>👤 Nome</label><input type="text" id="clientNameModal" value="' + (isEdit ? escapeHtml(editClient.name) : '') + '" placeholder="Nome completo"></div>' +
+                '<div class="form-group"><label>📱 WhatsApp</label><input type="tel" id="clientPhoneModal" value="' + (isEdit ? editClient.phone : '') + '" placeholder="11999999999"></div>' +
+                '<div class="form-group"><label>✂️ Cortes realizados</label><input type="number" id="clientCutsModal" value="' + (isEdit ? (editClient.cutsCount || 0) : 0) + '" min="0"></div>' +
+                '<div class="modal-buttons">' +
+                '<button class="modal-btn" id="saveClientBtn">' + (isEdit ? 'Salvar Alterações' : 'Cadastrar') + '</button>' +
+                '<button class="modal-btn-secondary" id="cancelClientBtn">Cancelar</button>' +
+                '</div></div>';
+            
+            document.body.appendChild(modal);
+            
+            document.getElementById('saveClientBtn').onclick = function() {
+                var name = document.getElementById('clientNameModal').value.trim();
+                var phone = document.getElementById('clientPhoneModal').value.replace(/\D/g, '');
+                var cuts = parseInt(document.getElementById('clientCutsModal').value) || 0;
+                
+                if (name && phone.length >= 10) {
+                    if (isEdit) {
+                        editClient.name = name;
+                        editClient.phone = phone;
+                        editClient.cutsCount = cuts;
+                        showToast("✅ Cliente atualizado com sucesso!");
+                    } else {
+                        if (clients.some(c => c.phone === phone)) {
+                            showToast("⚠️ Cliente já cadastrado!");
+                            return;
+                        }
+                        clients.push({
+                            id: Date.now(),
+                            name: name,
+                            phone: phone,
+                            cutsCount: cuts,
+                            createdAt: new Date().toISOString()
+                        });
+                        showToast("✅ Cliente cadastrado com sucesso!");
+                    }
+                    saveData();
+                    modal.remove();
+                    if (returnToManage) switchTab('manage');
+                    else renderClients();
+                } else {
+                    showToast("❌ Preencha nome e WhatsApp válido!");
+                }
+            };
+            document.getElementById('cancelClientBtn').onclick = () => { modal.remove(); if(returnToManage) switchTab('manage'); };
+        }
+        
+        window.editClientById = function(id) {
+            var client = clients.find(c => c.id === id);
+            if (client) showNewClientModal(client, false);
+        };
+        
+        // ============================================
+        // BLOCO 12: INICIALIZAÇÃO DO SISTEMA
+        // ============================================
+        
+        /**
+         * Verifica se o barbeiro já está cadastrado e inicia o sistema
+         */
+        function initializeSystem() {
+            var barberPhone = localStorage.getItem('barber_phone');
+            var barberName = localStorage.getItem('barber_name');
+            
+            if (!barberPhone || !barberName) {
+                setTimeout(function() {
+                    showBarberRegistrationModal();
+                }, 300);
+            } else {
+                loadData();
+                updateTimeOptions();
+                setupClientNameSearch();
+            }
+        }
+        
+        // Esconde a tela de boas-vindas após 2 segundos
+        setTimeout(function() {
+            var splash = document.getElementById('splashScreen');
+            var main = document.getElementById('mainContent');
+            if (splash && main) {
+                splash.style.opacity = '0';
+                setTimeout(function() {
+                    splash.style.display = 'none';
+                    main.classList.add('visible');
+                }, 500);
+            }
+        }, 2000);
+        
+        // Inicializa o sistema após a tela de boas-vindas
+        setTimeout(function() {
+            initializeSystem();
+        }, 2200);
+        
+    </script>
 </body>
 </html>
